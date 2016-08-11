@@ -45,7 +45,7 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../NeuralWeatherForecastOptimization/main.cpp \
+SOURCES       = ../NeuralWeatherForecastOptimization/DBWriterDaemon.cpp \
 		../NeuralWeatherForecastOptimization/src/airpressuresensor.cpp \
 		../NeuralWeatherForecastOptimization/src/sensor.cpp \
 		../NeuralWeatherForecastOptimization/src/temperaturesensor.cpp \
@@ -55,8 +55,11 @@ SOURCES       = ../NeuralWeatherForecastOptimization/main.cpp \
 		../NeuralWeatherForecastOptimization/src/logwriter.cpp \
 		../NeuralWeatherForecastOptimization/src/slevel.cpp \
 		../NeuralWeatherForecastOptimization/src/OpenWeatherMap.cpp \
-		../NeuralWeatherForecastOptimization/src/WebContent.cpp 
-OBJECTS       = main.o \
+		../NeuralWeatherForecastOptimization/src/WebContent.cpp \
+		../NeuralWeatherForecastOptimization/src/ArtificialNeuroNet.cpp \
+		../NeuralWeatherForecastOptimization/src/ArtificialNeuroNetWrapper.cpp \
+		../NeuralWeatherForecastOptimization/ANNTrainingDaemon.cpp 
+OBJECTS       = DBWriterDaemon.o \
 		airpressuresensor.o \
 		sensor.o \
 		temperaturesensor.o \
@@ -66,7 +69,10 @@ OBJECTS       = main.o \
 		logwriter.o \
 		slevel.o \
 		OpenWeatherMap.o \
-		WebContent.o
+		WebContent.o \
+		ArtificialNeuroNet.o \
+		ArtificialNeuroNetWrapper.o \
+		ANNTrainingDaemon.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -124,7 +130,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../NeuralWeatherForecastOptimization/NeuralWeatherForecastOptimization.pro ../NeuralWeatherForecastOptimization/main.cpp \
+		../NeuralWeatherForecastOptimization/NeuralWeatherForecastOptimization.pro ../NeuralWeatherForecastOptimization/DBWriterDaemon.cpp \
 		../NeuralWeatherForecastOptimization/src/airpressuresensor.cpp \
 		../NeuralWeatherForecastOptimization/src/sensor.cpp \
 		../NeuralWeatherForecastOptimization/src/temperaturesensor.cpp \
@@ -134,7 +140,10 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../NeuralWeatherForecastOptimization/src/logwriter.cpp \
 		../NeuralWeatherForecastOptimization/src/slevel.cpp \
 		../NeuralWeatherForecastOptimization/src/OpenWeatherMap.cpp \
-		../NeuralWeatherForecastOptimization/src/WebContent.cpp
+		../NeuralWeatherForecastOptimization/src/WebContent.cpp \
+		../NeuralWeatherForecastOptimization/src/ArtificialNeuroNet.cpp \
+		../NeuralWeatherForecastOptimization/src/ArtificialNeuroNetWrapper.cpp \
+		../NeuralWeatherForecastOptimization/ANNTrainingDaemon.cpp
 QMAKE_TARGET  = NeuralWeatherForecastOptimization
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = NeuralWeatherForecastOptimization
@@ -293,7 +302,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/NeuralWeatherForecastOptimization1.0.0 || mkdir -p .tmp/NeuralWeatherForecastOptimization1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/NeuralWeatherForecastOptimization1.0.0/ && $(COPY_FILE) --parents ../NeuralWeatherForecastOptimization/include/airpressuresensor.h ../NeuralWeatherForecastOptimization/include/sensor.h ../NeuralWeatherForecastOptimization/include/sensortype.h ../NeuralWeatherForecastOptimization/include/temperaturesensor.h ../NeuralWeatherForecastOptimization/include/catch.hpp ../NeuralWeatherForecastOptimization/include/config.h ../NeuralWeatherForecastOptimization/include/DataBuffer.h ../NeuralWeatherForecastOptimization/include/dbinterface.h ../NeuralWeatherForecastOptimization/include/HTTPRequest.h ../NeuralWeatherForecastOptimization/include/logwriter.h ../NeuralWeatherForecastOptimization/include/slevel.h ../NeuralWeatherForecastOptimization/include/OpenWeatherMap.h ../NeuralWeatherForecastOptimization/include/WebContent.h ../NeuralWeatherForecastOptimization/include/WebContentType.h .tmp/NeuralWeatherForecastOptimization1.0.0/ && $(COPY_FILE) --parents ../NeuralWeatherForecastOptimization/main.cpp ../NeuralWeatherForecastOptimization/src/airpressuresensor.cpp ../NeuralWeatherForecastOptimization/src/sensor.cpp ../NeuralWeatherForecastOptimization/src/temperaturesensor.cpp ../NeuralWeatherForecastOptimization/src/DataBuffer.cpp ../NeuralWeatherForecastOptimization/src/dbinterface.cpp ../NeuralWeatherForecastOptimization/src/HTTPRequest.cpp ../NeuralWeatherForecastOptimization/src/logwriter.cpp ../NeuralWeatherForecastOptimization/src/slevel.cpp ../NeuralWeatherForecastOptimization/src/OpenWeatherMap.cpp ../NeuralWeatherForecastOptimization/src/WebContent.cpp .tmp/NeuralWeatherForecastOptimization1.0.0/ && (cd `dirname .tmp/NeuralWeatherForecastOptimization1.0.0` && $(TAR) NeuralWeatherForecastOptimization1.0.0.tar NeuralWeatherForecastOptimization1.0.0 && $(COMPRESS) NeuralWeatherForecastOptimization1.0.0.tar) && $(MOVE) `dirname .tmp/NeuralWeatherForecastOptimization1.0.0`/NeuralWeatherForecastOptimization1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/NeuralWeatherForecastOptimization1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/NeuralWeatherForecastOptimization1.0.0/ && $(COPY_FILE) --parents ../NeuralWeatherForecastOptimization/include/airpressuresensor.h ../NeuralWeatherForecastOptimization/include/sensor.h ../NeuralWeatherForecastOptimization/include/sensortype.h ../NeuralWeatherForecastOptimization/include/temperaturesensor.h ../NeuralWeatherForecastOptimization/include/catch.hpp ../NeuralWeatherForecastOptimization/include/config.h ../NeuralWeatherForecastOptimization/include/DataBuffer.h ../NeuralWeatherForecastOptimization/include/dbinterface.h ../NeuralWeatherForecastOptimization/include/HTTPRequest.h ../NeuralWeatherForecastOptimization/include/logwriter.h ../NeuralWeatherForecastOptimization/include/slevel.h ../NeuralWeatherForecastOptimization/include/OpenWeatherMap.h ../NeuralWeatherForecastOptimization/include/WebContent.h ../NeuralWeatherForecastOptimization/include/WebContentType.h ../NeuralWeatherForecastOptimization/include/ArtificialNeuroNet.h ../NeuralWeatherForecastOptimization/include/ArtificialNeuroNetWrapper.h .tmp/NeuralWeatherForecastOptimization1.0.0/ && $(COPY_FILE) --parents ../NeuralWeatherForecastOptimization/DBWriterDaemon.cpp ../NeuralWeatherForecastOptimization/src/airpressuresensor.cpp ../NeuralWeatherForecastOptimization/src/sensor.cpp ../NeuralWeatherForecastOptimization/src/temperaturesensor.cpp ../NeuralWeatherForecastOptimization/src/DataBuffer.cpp ../NeuralWeatherForecastOptimization/src/dbinterface.cpp ../NeuralWeatherForecastOptimization/src/HTTPRequest.cpp ../NeuralWeatherForecastOptimization/src/logwriter.cpp ../NeuralWeatherForecastOptimization/src/slevel.cpp ../NeuralWeatherForecastOptimization/src/OpenWeatherMap.cpp ../NeuralWeatherForecastOptimization/src/WebContent.cpp ../NeuralWeatherForecastOptimization/src/ArtificialNeuroNet.cpp ../NeuralWeatherForecastOptimization/src/ArtificialNeuroNetWrapper.cpp ../NeuralWeatherForecastOptimization/ANNTrainingDaemon.cpp .tmp/NeuralWeatherForecastOptimization1.0.0/ && (cd `dirname .tmp/NeuralWeatherForecastOptimization1.0.0` && $(TAR) NeuralWeatherForecastOptimization1.0.0.tar NeuralWeatherForecastOptimization1.0.0 && $(COMPRESS) NeuralWeatherForecastOptimization1.0.0.tar) && $(MOVE) `dirname .tmp/NeuralWeatherForecastOptimization1.0.0`/NeuralWeatherForecastOptimization1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/NeuralWeatherForecastOptimization1.0.0
 
 
 clean:compiler_clean 
@@ -330,7 +339,7 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../NeuralWeatherForecastOptimization/main.cpp ../NeuralWeatherForecastOptimization/include/DataBuffer.h \
+DBWriterDaemon.o: ../NeuralWeatherForecastOptimization/DBWriterDaemon.cpp ../NeuralWeatherForecastOptimization/include/DataBuffer.h \
 		../NeuralWeatherForecastOptimization/include/sensor.h \
 		../NeuralWeatherForecastOptimization/include/sensortype.h \
 		../NeuralWeatherForecastOptimization/include/temperaturesensor.h \
@@ -339,8 +348,11 @@ main.o: ../NeuralWeatherForecastOptimization/main.cpp ../NeuralWeatherForecastOp
 		../NeuralWeatherForecastOptimization/include/config.h \
 		../NeuralWeatherForecastOptimization/include/logwriter.h \
 		../NeuralWeatherForecastOptimization/include/slevel.h \
-		../NeuralWeatherForecastOptimization/include/HTTPRequest.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../NeuralWeatherForecastOptimization/main.cpp
+		../NeuralWeatherForecastOptimization/include/HTTPRequest.h \
+		../NeuralWeatherForecastOptimization/include/WebContent.h \
+		../NeuralWeatherForecastOptimization/include/WebContentType.h \
+		../NeuralWeatherForecastOptimization/include/OpenWeatherMap.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o DBWriterDaemon.o ../NeuralWeatherForecastOptimization/DBWriterDaemon.cpp
 
 airpressuresensor.o: ../NeuralWeatherForecastOptimization/src/airpressuresensor.cpp ../NeuralWeatherForecastOptimization/include/airpressuresensor.h \
 		../NeuralWeatherForecastOptimization/include/sensortype.h
@@ -388,6 +400,28 @@ WebContent.o: ../NeuralWeatherForecastOptimization/src/WebContent.cpp ../NeuralW
 		../NeuralWeatherForecastOptimization/include/WebContentType.h \
 		../NeuralWeatherForecastOptimization/include/DataBuffer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o WebContent.o ../NeuralWeatherForecastOptimization/src/WebContent.cpp
+
+ArtificialNeuroNet.o: ../NeuralWeatherForecastOptimization/src/ArtificialNeuroNet.cpp ../NeuralWeatherForecastOptimization/include/ArtificialNeuroNet.h \
+		../NeuralWeatherForecastOptimization/include/config.h \
+		../NeuralWeatherForecastOptimization/include/logwriter.h \
+		../NeuralWeatherForecastOptimization/include/slevel.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ArtificialNeuroNet.o ../NeuralWeatherForecastOptimization/src/ArtificialNeuroNet.cpp
+
+ArtificialNeuroNetWrapper.o: ../NeuralWeatherForecastOptimization/src/ArtificialNeuroNetWrapper.cpp ../NeuralWeatherForecastOptimization/include/ArtificialNeuroNetWrapper.h \
+		../NeuralWeatherForecastOptimization/include/DataBuffer.h \
+		../NeuralWeatherForecastOptimization/include/ArtificialNeuroNet.h \
+		../NeuralWeatherForecastOptimization/include/config.h \
+		../NeuralWeatherForecastOptimization/include/logwriter.h \
+		../NeuralWeatherForecastOptimization/include/slevel.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ArtificialNeuroNetWrapper.o ../NeuralWeatherForecastOptimization/src/ArtificialNeuroNetWrapper.cpp
+
+ANNTrainingDaemon.o: ../NeuralWeatherForecastOptimization/ANNTrainingDaemon.cpp ../NeuralWeatherForecastOptimization/include/logwriter.h \
+		../NeuralWeatherForecastOptimization/include/slevel.h \
+		../NeuralWeatherForecastOptimization/include/ArtificialNeuroNetWrapper.h \
+		../NeuralWeatherForecastOptimization/include/DataBuffer.h \
+		../NeuralWeatherForecastOptimization/include/ArtificialNeuroNet.h \
+		../NeuralWeatherForecastOptimization/include/config.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ANNTrainingDaemon.o ../NeuralWeatherForecastOptimization/ANNTrainingDaemon.cpp
 
 ####### Install
 

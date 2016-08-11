@@ -21,7 +21,7 @@ INCLUDEPATH += include/
 LIBS += -lcurl
 
 
-SOURCES += main.cpp \
+SOURCES += DBWriterDaemon.cpp \
     src/airpressuresensor.cpp \
     src/sensor.cpp \
     src/temperaturesensor.cpp \
@@ -31,7 +31,11 @@ SOURCES += main.cpp \
     src/logwriter.cpp \
     src/slevel.cpp \
     src/OpenWeatherMap.cpp \
-    src/WebContent.cpp
+    src/WebContent.cpp \
+    src/ArtificialNeuroNet.cpp \
+    src/ArtificialNeuroNetWrapper.cpp \
+    ANNTrainingDaemon.cpp
+
 
 HEADERS += \
     include/airpressuresensor.h \
@@ -47,4 +51,6 @@ HEADERS += \
     include/slevel.h \
     include/OpenWeatherMap.h \
     include/WebContent.h \
-    include/WebContentType.h
+    include/WebContentType.h \
+    include/ArtificialNeuroNet.h \
+    include/ArtificialNeuroNetWrapper.h

@@ -34,3 +34,15 @@
 10/08/16-23:07:00 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
 10/08/16-23:07:32 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
 10/08/16-23:07:32 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+11/08/16-16:49:53 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
+11/08/16-16:49:53 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+11/08/16-17:07:37 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
+11/08/16-17:07:37 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+11/08/16-17:37:40 - INFO      - ANNTrainingDaemon - Started Training.
+11/08/16-17:37:40 - INFO      - ANNTrainingDaemon - Finished Training.
+11/08/16-17:41:12 - INFO      - ANNTrainingDaemon - Started Training.
+11/08/16-17:41:12 - INFO      - ANNTrainingDaemon - Finished Training.
+11/08/16-17:46:05 - INFO      - ANNTrainingDaemon - Started Training.
+11/08/16-17:46:05 - INFO      - ANNTrainingDaemon - Finished Training.
+11/08/16-17:46:44 - INFO      - ANNTrainingDaemon - Started Training.
+11/08/16-17:46:44 - INFO      - ANNTrainingDaemon - Finished Training. Elapsed Time : 0.000183 seconds.

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 // ----
 #include "DataBuffer.h"
 #include "sensor.h"
@@ -15,9 +16,13 @@
  * @brief reads sensor-values and web-forecast and writes them to DB
  *
  */
+//int main1() {
 int main() {
     // create Log-Writer Object
-    LogWriter log("DBWriterDaemon", "Log.txt");
+    LogWriter log("DBWriterDaemon", PATH_OF_LOGFILE);
+    log << SLevel(INFO) << "Started writing sensor/forecast-data to database." << endl;
+    // measure time-start
+    clock_t begin = clock();
 
     // create and init singleton-DBInterface-object
     DBInterface& dbi = DBInterface::getInstance();
@@ -73,7 +78,10 @@ int main() {
 
     }
 
-
+    // measure time-end
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    log << SLevel(INFO) << "Finished writing sensor/forecast-data to database. Elapsed Time : " << elapsed_secs << " seconds." << endl;
 
     return 0;
 }
