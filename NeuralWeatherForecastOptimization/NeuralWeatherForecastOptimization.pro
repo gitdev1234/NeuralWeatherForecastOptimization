@@ -34,7 +34,8 @@ SOURCES += DBWriterDaemon.cpp \
     src/WebContent.cpp \
     src/ArtificialNeuroNet.cpp \
     src/ArtificialNeuroNetWrapper.cpp \
-    ANNTrainingDaemon.cpp
+    ANNTrainingDaemon.cpp \
+    ForecastCalculator.cpp
 
 
 HEADERS += \

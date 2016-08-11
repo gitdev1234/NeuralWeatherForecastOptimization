@@ -1,21 +1,19 @@
-11/08/16-17:56:56 - INFO      - ANNTrainingDaemon - Started Training.
-11/08/16-17:56:56 - INFO      - ArtificialNeuroNetWrapper - Initialized ArtificialNeuroNetWrapper
-11/08/16-17:56:56 - INFO      - ArtificialNeuroNet : AirTemperature2MForecast - Initialized ArtificialNeuroNet with name of AirTemperature2MForecast.
-11/08/16-17:56:56 - INFO      - ArtificialNeuroNet : Humidity2MForecast - Initialized ArtificialNeuroNet with name of Humidity2MForecast.
-11/08/16-17:56:56 - INFO      - ArtificialNeuroNet : AirTemperature2MForecast - successfully trained artificial neural net with 0 training samples.
-11/08/16-17:56:56 - INFO      - ArtificialNeuroNet : Humidity2MForecast - successfully trained artificial neural net with 0 training samples.
-11/08/16-17:56:56 - INFO      - ArtificialNeuroNetWrapper - Successfully trained artificial neuro nets.
-11/08/16-17:56:56 - INFO      - ANNTrainingDaemon - Finished Training. Elapsed Time : 0.000164 seconds.
-11/08/16-17:57:52 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
-11/08/16-17:57:53 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
-11/08/16-17:57:53 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
-11/08/16-18:01:35 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
-11/08/16-18:01:35 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
-11/08/16-18:01:35 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
-11/08/16-18:01:35 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
-11/08/16-18:01:35 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.030337 seconds.
-11/08/16-18:01:56 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
-11/08/16-18:01:56 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
-11/08/16-18:01:56 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
-11/08/16-18:01:56 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
-11/08/16-18:01:56 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.025218 seconds.
+11/08/16-18:47:18 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
+11/08/16-18:47:18 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+11/08/16-18:47:18 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
+11/08/16-18:47:18 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+11/08/16-18:47:18 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.026323 seconds.
+11/08/16-18:47:40 - INFO      - ANNTrainingDaemon - Started Training.
+11/08/16-18:47:40 - INFO      - ArtificialNeuroNetWrapper - Initialized ArtificialNeuroNetWrapper
+11/08/16-18:47:40 - INFO      - ArtificialNeuroNet : AirTemperature2MForecast - Initialized ArtificialNeuroNet with name of AirTemperature2MForecast.
+11/08/16-18:47:40 - INFO      - ArtificialNeuroNet : Humidity2MForecast - Initialized ArtificialNeuroNet with name of Humidity2MForecast.
+11/08/16-18:47:40 - INFO      - ArtificialNeuroNet : AirTemperature2MForecast - successfully trained artificial neural net with 0 training samples.
+11/08/16-18:47:40 - INFO      - ArtificialNeuroNet : Humidity2MForecast - successfully trained artificial neural net with 0 training samples.
+11/08/16-18:47:40 - INFO      - ArtificialNeuroNetWrapper - Successfully trained artificial neuro nets.
+11/08/16-18:47:40 - INFO      - ANNTrainingDaemon - Finished Training. Elapsed Time : 0.00017 seconds.
+11/08/16-18:48:01 - INFO      - ForecastCalculator - Started calculation of forecast.
+11/08/16-18:48:01 - INFO      - ArtificialNeuroNetWrapper - Initialized ArtificialNeuroNetWrapper
+11/08/16-18:48:01 - INFO      - ArtificialNeuroNet : AirTemperature2MForecast - Initialized ArtificialNeuroNet with name of AirTemperature2MForecast.
+11/08/16-18:48:01 - INFO      - ArtificialNeuroNet : Humidity2MForecast - Initialized ArtificialNeuroNet with name of Humidity2MForecast.
+11/08/16-18:48:01 - INFO      - ForecastCalculator - Succesfully calculated optimized forecast.
+11/08/16-18:48:01 - INFO      - ForecastCalculator - Finished calculation of forecast. Elapsed Time : 0.000208 seconds.
