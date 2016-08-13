@@ -36,7 +36,8 @@ SOURCES += DBWriterDaemon.cpp \
     src/LogWriter.cpp \
     src/Sensor.cpp \
     src/SLevel.cpp \
-    src/TemperatureSensor.cpp
+    src/TemperatureSensor.cpp \
+    ArchiveDataPreprocessor.cpp
 
 
 HEADERS += \
