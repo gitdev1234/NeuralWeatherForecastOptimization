@@ -1,7 +1,7 @@
 #include <ctime>
 // ---
-#include "logwriter.h"
-#include "ArtificialNeuroNetWrapper.h"
+#include "LogWriter.h"
+#include "ANNWrapper.h"
 
 /**
  * main of ANNTrainingDaemon
@@ -18,11 +18,13 @@ int main2() {
     clock_t begin = clock();
 
     // train artificial neuro nets
-    ArtificialNeuroNetWrapper ANNWrapper;
-    ANNWrapper.trainArtificialNeuroNets();
+    ANNWrapper ANNWrap;
+    ANNWrap.trainArtificialNeuroNets();
 
     // measure time-end
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     log << SLevel(INFO) << "Finished Training. Elapsed Time : " << elapsed_secs << " seconds." << endl;
+
+    return 0;
 }

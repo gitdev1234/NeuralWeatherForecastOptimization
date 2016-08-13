@@ -2,11 +2,11 @@
 #include <ctime>
 // ----
 #include "DataBuffer.h"
-#include "sensor.h"
-#include "temperaturesensor.h"
-#include "airpressuresensor.h"
-#include "dbinterface.h"
-#include "logwriter.h"
+#include "Sensor.h"
+#include "TemperatureSensor.h"
+#include "AirPressureSensor.h"
+#include "DBInterface.h"
+#include "LogWriter.h"
 #include "WebContent.h"
 #include "OpenWeatherMap.h"
 

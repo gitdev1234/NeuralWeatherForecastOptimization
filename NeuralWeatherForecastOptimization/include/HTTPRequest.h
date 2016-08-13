@@ -4,8 +4,8 @@
 #include <curl/curl.h>
 #include <iostream>
 // ---
-#include "logwriter.h"
-#include "config.h"
+#include "LogWriter.h"
+#include "Config.h"
 
 /**
  * HTTPRequest class

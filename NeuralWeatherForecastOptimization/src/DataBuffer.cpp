@@ -6,7 +6,7 @@
  * @version 1.0 20160704
  */
 
-#include "../include/DataBuffer.h"
+#include "DataBuffer.h"
 
 /**
  * operator <<
@@ -61,6 +61,17 @@ bool DataBuffer::operator==(DataBuffer &other_) {
 
 }
 
+/**
+ * DataBuffer::compareCTimeEqual
+ * @brief compares if time1_ and time2_ are equal
+ * @param time1_ struct tm to compare with time2_
+ * @param time2_ struct tm to compare with time1_
+ * @return returns true if time1_ and time2_ are equal
+ *
+ * NOTICE : only the following tm_fields are supported
+ *          tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec
+ *          all other tm_fields are not considered for comparison
+ */
 bool DataBuffer::compareCTimeEqual(struct tm time1_, struct tm time2_) {
     return ( (time1_.tm_year == time2_.tm_year) &&
              (time1_.tm_mon  == time2_.tm_mon ) &&

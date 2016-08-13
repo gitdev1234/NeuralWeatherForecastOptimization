@@ -22,8 +22,8 @@
 #include <iomanip>
 // ---
 #include "DataBuffer.h"
-#include "config.h"
-#include "logwriter.h"
+#include "Config.h"
+#include "LogWriter.h"
 #include "HTTPRequest.h"
 
 /**

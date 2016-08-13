@@ -1,12 +1,12 @@
 /**
- * slevel.cpp
+ * SLevel.cpp
  * Purpose: implements class SLevel
  *
  * @author Wall.Of.Death
  * @version 1.0 20160629
  */
 
-#include "../include/slevel.h"
+#include "../include/SLevel.h"
 
 /**
  * SLevel::severityLevelToString

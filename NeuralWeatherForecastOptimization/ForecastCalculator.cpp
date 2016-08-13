@@ -1,7 +1,7 @@
 #include <ctime>
 // ---
-#include "logwriter.h"
-#include "ArtificialNeuroNetWrapper.h"
+#include "LogWriter.h"
+#include "ANNWrapper.h"
 
 /**
  * main of ForecastCalculator
@@ -18,8 +18,8 @@ int main3() {
     clock_t begin = clock();
 
     // train artificial neuro nets
-    ArtificialNeuroNetWrapper ANNWrapper;
-    DataBuffer optimizedForecast = ANNWrapper.calculateOutput();
+    ANNWrapper ANNWrap;
+    DataBuffer optimizedForecast = ANNWrap.calculateOutput();
 
     if (optimizedForecast.data.size() > 0) {
         log << SLevel(INFO) << "Succesfully calculated optimized forecast." << endl;
@@ -32,5 +32,7 @@ int main3() {
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     log << SLevel(INFO) << "Finished calculation of forecast. Elapsed Time : " << elapsed_secs << " seconds." << endl;
+
+    return 0;
 }
 

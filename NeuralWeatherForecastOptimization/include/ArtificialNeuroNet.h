@@ -12,8 +12,8 @@
 #include <vector>
 #include <cstdlib>
 // ---
-#include "config.h"
-#include "logwriter.h"
+#include "Config.h"
+#include "LogWriter.h"
 
 using namespace std;
 

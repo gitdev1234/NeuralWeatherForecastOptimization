@@ -1,5 +1,5 @@
 /**
- * slevel.cpp
+ * SLevel.cpp
  * Purpose: define class SLevel and enum SeverityLevel
  *
  * @author Wall.Of.Death
@@ -13,7 +13,7 @@
 class LogWriter;
 
 #include <string>
-#include "logwriter.h"
+#include "LogWriter.h"
 
 using namespace std;
 

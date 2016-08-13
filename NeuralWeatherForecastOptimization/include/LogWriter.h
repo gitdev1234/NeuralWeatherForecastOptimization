@@ -12,7 +12,7 @@
 #include <fstream>
 #include <string>
 #include <ctime>
-#include "slevel.h"
+#include "SLevel.h"
 
 using namespace std;
 

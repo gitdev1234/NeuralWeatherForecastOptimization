@@ -17,41 +17,43 @@ CONFIG   += c++11
 TEMPLATE = app
 
 INCLUDEPATH += include/
+INCLUDEPATH += ../include/
 
 LIBS += -lcurl
 
 
 SOURCES += DBWriterDaemon.cpp \
-    src/airpressuresensor.cpp \
-    src/sensor.cpp \
-    src/temperaturesensor.cpp \
+    ANNTrainingDaemon.cpp \
+    ForecastCalculator.cpp \
     src/DataBuffer.cpp \
-    src/dbinterface.cpp \
     src/HTTPRequest.cpp \
-    src/logwriter.cpp \
-    src/slevel.cpp \
     src/OpenWeatherMap.cpp \
     src/WebContent.cpp \
     src/ArtificialNeuroNet.cpp \
-    src/ArtificialNeuroNetWrapper.cpp \
-    ANNTrainingDaemon.cpp \
-    ForecastCalculator.cpp
+    src/AirPressureSensor.cpp \
+    src/ANNWrapper.cpp \
+    src/DBInterface.cpp \
+    src/LogWriter.cpp \
+    src/Sensor.cpp \
+    src/SLevel.cpp \
+    src/TemperatureSensor.cpp
 
 
 HEADERS += \
-    include/airpressuresensor.h \
-    include/sensor.h \
-    include/sensortype.h \
-    include/temperaturesensor.h \
     include/catch.hpp \
-    include/config.h \
     include/DataBuffer.h \
-    include/dbinterface.h \
     include/HTTPRequest.h \
-    include/logwriter.h \
-    include/slevel.h \
     include/OpenWeatherMap.h \
     include/WebContent.h \
     include/WebContentType.h \
     include/ArtificialNeuroNet.h \
-    include/ArtificialNeuroNetWrapper.h
+    include/ArtificialNeuroNetWrapper.h \
+    include/AirPressureSensor.h \
+    include/ANNWrapper.h \
+    include/Config.h \
+    include/DBInterface.h \
+    include/LogWriter.h \
+    include/Sensor.h \
+    include/SensorType.h \
+    include/SLevel.h \
+    include/TemperatureSensor.h

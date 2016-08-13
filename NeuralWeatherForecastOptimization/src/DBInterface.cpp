@@ -7,7 +7,7 @@
  */
 
 
-#include "../include/dbinterface.h"
+#include "DBInterface.h"
 
 /**
  * DBInterface::init

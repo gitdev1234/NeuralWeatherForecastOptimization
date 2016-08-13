@@ -1,21 +1,21 @@
 /**
- * ArtificialNeuroNetWrapper.h
- * Purpose: defines class ArtificialNeuroNetWrapper
+ * ANNWrapper.h
+ * Purpose: defines class ANNWrapper
  *
  * @author Wall.Of.Death
  * @version 1.0 20160811
  */
 
-#ifndef ARTIFICIALNEURONETWRAPPER_H
-#define ARTIFICIALNEURONETWRAPPER_H
+#ifndef ANNWRAPPER_H
+#define ANNWRAPPER_H
 
 #include "DataBuffer.h"
 #include "ArtificialNeuroNet.h"
-#include "logwriter.h"
-#include "config.h"
+#include "LogWriter.h"
+#include "Config.h"
 
 /**
- * The ArtificialNeuroNetWrapper class
+ * The ANNWrapper class
  * @brief a wrapper class for interfacing the artificial neuro nets used for forecast optimization
  *
  * This class provides an easy to use interface to interact with the artificial neuro nets.
@@ -24,10 +24,10 @@
  *   2. easy calculating a optimized forecast by calculating all outputs of all artificial neuro nets
  *
  */
-class ArtificialNeuroNetWrapper {
+class ANNWrapper {
     public:
         /* --- constructor / destructor --- */
-        ArtificialNeuroNetWrapper();
+        ANNWrapper();
 
         /* --- train neuro nets --- */
         void trainArtificialNeuroNets();
@@ -43,5 +43,5 @@ class ArtificialNeuroNetWrapper {
         LogWriter log;
 };
 
-#endif // ARTIFICIALNEURONETWRAPPER_H
+#endif // ANNWRAPPER_H
 

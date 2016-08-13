@@ -1,24 +1,24 @@
 /**
- * ArtificialNeuroNetWrapper.cpp
- * Purpose: implements class ArtificialNeuroNetWrapper
+ * ANNWrapper.cpp
+ * Purpose: implements class ANNWrapper
  *
  * @author Wall.Of.Death
  * @version 1.0 20160811
  */
 
-#include "ArtificialNeuroNetWrapper.h"
+#include "ANNWrapper.h"
 
 /* --- constructor / destructor --- */
 
 /**
- * ArtificialNeuroNetWrapper::ArtificialNeuroNetWrapper
+ * ANNWrapper::ANNWrapper
  * @brief constructor of ANN-wrapper class, initializes LogWriter and ANN-objects
  *
  */
-ArtificialNeuroNetWrapper::ArtificialNeuroNetWrapper() {
+ANNWrapper::ANNWrapper() {
     // create and initialize LogWriter-object
-    log = LogWriter("ArtificialNeuroNetWrapper", PATH_OF_LOGFILE);
-    log << SLevel(INFO) << "Initialized ArtificialNeuroNetWrapper" << endl;
+    log = LogWriter("ANNWrapper", PATH_OF_LOGFILE);
+    log << SLevel(INFO) << "Initialized ANNWrapper" << endl;
 
     // initialize ANN-objects
     AirTemperature2MForecast.init("AirTemperature2MForecast");
@@ -28,28 +28,28 @@ ArtificialNeuroNetWrapper::ArtificialNeuroNetWrapper() {
 /* --- train neuro nets --- */
 
 /**
- * ArtificialNeuroNetWrapper::trainArtificialNeuroNets
+ * ANNWrapper::trainArtificialNeuroNets
  * @brief trains all artificial neuro nets inside this class
  */
-void ArtificialNeuroNetWrapper::trainArtificialNeuroNets() {
+void ANNWrapper::trainArtificialNeuroNets() {
+    log << SLevel(INFO) << "Successfully trained Artificial Neuro Net for Temperature 2m" << endl;
+
     // --- TODO -- dummy code ---
     vector< vector<double> > inputValues;
     vector<double> expectedOutputValues;
     AirTemperature2MForecast.train(inputValues,expectedOutputValues);
           Humidity2MForecast.train(inputValues,expectedOutputValues);
     // --- TODO -- dummy code ---
-
-    log << SLevel(INFO) << "Successfully trained artificial neuro nets." << endl;
 }
 
 /* --- calculate forecast outputs --- */
 
 /**
- * ArtificialNeuroNetWrapper::calculateOutput
+ * ANNWrapper::calculateOutput
  * @brief calculates the output of all artificial neuron nets inside this class and outputs them
  * @return returns DataBuffer which contains all outputs of all neuro nets inside this class
  */
-DataBuffer ArtificialNeuroNetWrapper::calculateOutput() {
+DataBuffer ANNWrapper::calculateOutput() {
     DataBuffer result;
 
     // --- TODO -- dummy code ---

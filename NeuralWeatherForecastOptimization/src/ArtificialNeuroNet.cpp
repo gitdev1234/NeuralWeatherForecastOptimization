@@ -6,7 +6,7 @@
  * @version 1.0 20160811
  */
 
-#include "../include/ArtificialNeuroNet.h"
+#include "ArtificialNeuroNet.h"
 
 /* --- constructors / initialization / destructors --- */
 
