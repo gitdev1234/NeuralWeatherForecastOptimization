@@ -16,7 +16,8 @@ using namespace std;
 
 // constants
 const string URL_OF_DATABASE = "http://localhost:8086";
-const string NAME_OF_DATBASE = "WeatherData2";
+// TODO
+const string NAME_OF_DATBASE = "WeatherData";
 const string PATH_OF_LOGFILE = "LogFile.txt";
 const double INFLUXDB_MAX    =  1.79769e+308;
 const double INFLUXDB_MIN    = -1.79769e+308;

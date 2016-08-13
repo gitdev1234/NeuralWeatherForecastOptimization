@@ -26,9 +26,9 @@ int main1() {
 
     // create and init singleton-DBInterface-object
     DBInterface& dbi = DBInterface::getInstance();
+    dbi.init();
     // todo
     dbi.writeStatusOK(true);
-    dbi.init();
 
     // create sensor objects
     Sensor AirTemperature2MSensor;
