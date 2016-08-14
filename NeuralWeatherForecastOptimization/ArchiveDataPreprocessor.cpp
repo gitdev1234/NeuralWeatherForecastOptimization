@@ -14,6 +14,7 @@ using namespace std;
 struct tm incHour(struct tm time_, int hourDelta_) {
     QDateTime qtDate(QDate(time_.tm_year, time_.tm_mon, time_.tm_mday),
                      QTime(time_.tm_hour, time_.tm_min, time_.tm_sec));
+    qtDate.setTimeSpec(Qt::UTC);
     qtDate = qtDate.addSecs(3600*hourDelta_);
     time_.tm_year = qtDate.date().year();
     time_.tm_mon  = qtDate.date().month();
@@ -35,6 +36,7 @@ int main() {
     cout << "Hello World!" << endl;
 
     DataBuffer firstDataBuffer;
+    LogWriter log("ArchiveDataPreprocessor", PATH_OF_LOGFILE+"x");
 
     // create and init singleton-DBInterface-object
     DBInterface& dbi = DBInterface::getInstance();
@@ -55,6 +57,39 @@ int main() {
     firstDataBuffer.dataSource = "Forecast";
     firstDataBuffer.useDataSource = true;
     firstDataBuffer.data[name] = 0;
+
+
+    bool lastDateReached = false;
+
+
+    while (!lastDateReached) {
+        if ( (firstDataBuffer.startDateTime.tm_year >= 2016) &&
+             (firstDataBuffer.startDateTime.tm_mon  >= 7   ) &&
+             (firstDataBuffer.startDateTime.tm_mday >= 16  ) &&
+             (firstDataBuffer.startDateTime.tm_hour >= 21  ) &&
+             (firstDataBuffer.startDateTime.tm_min  >= 0   ) &&
+             (firstDataBuffer.startDateTime.tm_sec  >= 0   ) ){
+            lastDateReached = true;
+        }
+        vector<DataBuffer> result = dbi.readFromDataBase(firstDataBuffer);
+        if (result.size() == 0) {
+            log << SLevel(ERROR) << "Data missing at "
+                << firstDataBuffer.startDateTime.tm_year << "-"
+                << firstDataBuffer.startDateTime.tm_mon  << "-"
+                << firstDataBuffer.startDateTime.tm_mday << "T"
+                << firstDataBuffer.startDateTime.tm_hour << ":"
+                << firstDataBuffer.startDateTime.tm_min  << ":"
+                << firstDataBuffer.startDateTime.tm_sec  << "Z" << endl;
+        }
+        if (firstDataBuffer.startDateTime.tm_mday == 25) {
+            cout << "tuut" << endl;
+        }
+        firstDataBuffer.startDateTime = incHour(firstDataBuffer.startDateTime,3);
+        firstDataBuffer.endDateTime   = firstDataBuffer.startDateTime;
+
+    }
+
+    /*
     vector<DataBuffer> result = dbi.readFromDataBase(firstDataBuffer);
     double firstValue = result[0].data[name];
 
@@ -84,6 +119,6 @@ int main() {
     cout << "2 " << secondDataBuffer << endl;
     cout << "3 " <<  thirdDataBuffer << endl;
     cout << "4 " << fourthDataBuffer << endl;
-
+*/
     return 0;
 }
