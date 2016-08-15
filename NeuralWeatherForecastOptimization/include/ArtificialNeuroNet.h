@@ -14,6 +14,7 @@
 // ---
 #include "Config.h"
 #include "LogWriter.h"
+#include "DBInterface.h"
 
 using namespace std;
 
@@ -33,17 +34,21 @@ using namespace std;
 class ArtificialNeuroNet {
     public:
         /* --- constructors / initialization / destructors --- */
-        ArtificialNeuroNet() {};
-        void init(string name_);
+        ArtificialNeuroNet(){};
+        void init(string name_, DBInterface *dbInterface_);
 
         /* --- pushing values forward (from input to output) --- */
         double forward (vector<double> inputValues_);
 
         /* --- train / optimize weights --- */
         bool train (vector< vector<double> > inputValues_, vector<double> expectedOutputValues_);
-    private:
+
+private:
         /* --- miscellaneous --- */
         LogWriter log;
+        bool checkValuesAreValid(const vector<double> &values_);
+        bool checkValuesAreValid(const vector<vector<double>> &values_);
+        DBInterface* dbi;
 
 };
 

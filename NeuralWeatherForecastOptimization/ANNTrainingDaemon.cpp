@@ -22,8 +22,14 @@ int main2() {
     // measure time-start
     clock_t begin = clock();
 
+    // create and init singleton-DBInterface-object
+    DBInterface& dbi = DBInterface::getInstance();
+    dbi.init();
+    // todo
+    dbi.writeStatusOK(true);
+
     // train artificial neuro nets
-    ANNWrapper ANNWrap;
+    ANNWrapper ANNWrap(&dbi);
     ANNWrap.trainArtificialNeuroNets();
 
     // measure time-end

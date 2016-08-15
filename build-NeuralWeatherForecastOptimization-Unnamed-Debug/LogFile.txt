@@ -24906,3 +24906,50 @@
 15/08/16-14:46:04 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
 15/08/16-14:46:04 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
 15/08/16-14:46:04 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+15/08/16-15:00:25 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+15/08/16-15:00:25 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+15/08/16-15:00:25 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+15/08/16-15:00:25 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+15/08/16-15:00:25 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+15/08/16-20:34:52 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+15/08/16-20:34:52 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+15/08/16-20:34:53 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+15/08/16-20:34:53 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+15/08/16-20:34:53 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+15/08/16-20:34:54 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-20:34:54 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-20:34:54 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-20:34:54 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-20:34:54 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-20:34:54 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-20:34:54 - INFO      - ANNWrapper - Successfully trained Artificial Neuro Net for Temperature 2m
+15/08/16-20:34:54 - INFO      - ArtificialNeuroNet : ANNTemperature - successfully trained artificial neural net with 1 training samples.
+15/08/16-20:34:54 - INFO      - ArtificialNeuroNet : ANNAirPressure - successfully trained artificial neural net with 1 training samples.
+15/08/16-20:34:54 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+15/08/16-20:34:54 - ERROR     - ArtificialNeuroNet : test ann - Aborted forward because of invalid input-values. (Probably empty vector or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
+15/08/16-20:34:55 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+15/08/16-20:34:55 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+15/08/16-20:34:55 - ERROR     - ArtificialNeuroNet : test ann - Aborted train because of invalid input-values or expected outputValues. (Probably empty vectors or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
+15/08/16-20:34:55 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+15/08/16-20:34:55 - INFO      - ArtificialNeuroNet : test ann - successfully trained artificial neural net with 1 training samples.
+15/08/16-20:36:00 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+15/08/16-20:36:00 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+15/08/16-20:36:01 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+15/08/16-20:36:01 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+15/08/16-20:36:01 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+15/08/16-20:36:02 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-20:36:02 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-20:36:02 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-20:36:02 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-20:36:02 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-20:36:02 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-20:36:02 - INFO      - ANNWrapper - Successfully trained Artificial Neuro Net for Temperature 2m
+15/08/16-20:36:02 - INFO      - ArtificialNeuroNet : ANNTemperature - successfully trained artificial neural net with 1 training samples.
+15/08/16-20:36:02 - INFO      - ArtificialNeuroNet : ANNAirPressure - successfully trained artificial neural net with 1 training samples.
+15/08/16-20:36:02 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+15/08/16-20:36:02 - ERROR     - ArtificialNeuroNet : test ann - Aborted forward because of invalid input-values. (Probably empty vector or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
+15/08/16-20:36:03 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+15/08/16-20:36:03 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+15/08/16-20:36:03 - ERROR     - ArtificialNeuroNet : test ann - Aborted train because of invalid input-values or expected outputValues. (Probably empty vectors or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
+15/08/16-20:36:03 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+15/08/16-20:36:03 - INFO      - ArtificialNeuroNet : test ann - successfully trained artificial neural net with 1 training samples.

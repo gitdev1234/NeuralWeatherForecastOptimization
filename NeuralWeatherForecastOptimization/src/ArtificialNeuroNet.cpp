@@ -14,11 +14,12 @@
  * ArtificialNeuroNet::init
  * @brief initializes LogWriter
  */
-void ArtificialNeuroNet::init(string name_){
+void ArtificialNeuroNet::init(string name_, DBInterface* dbInterface_){
     // create LogWriter-object
     log = LogWriter("ArtificialNeuroNet : " + name_ , PATH_OF_LOGFILE);
 
     log << SLevel(INFO) << "Initialized ArtificialNeuroNet with name of " << name_ << "." << endl;
+    dbi = &dbInterface_->getInstance();
 }
 
 
@@ -34,12 +35,20 @@ void ArtificialNeuroNet::init(string name_){
 double ArtificialNeuroNet::forward(vector<double> inputValues_) {
     double result;
 
-    // --- TODO -- dummy code ---
-    result = rand() % 20;
-    // --- TODO -- dummy code ---
+    if (!checkValuesAreValid(inputValues_)) {
+        log << SLevel(ERROR) << "Aborted forward because of invalid input-values. (Probably empty" <<
+                                " vector or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]" << endl;
+        dbi->writeStatusOK(false);
+        return 0;
+    } else {
 
-    // return vector of values
-    return result;
+        // --- TODO -- dummy code ---
+        result = rand() % 20;
+        // --- TODO -- dummy code ---
+
+        // return vector of values
+        return result;
+    }
 }
 
 /* --- train / optimize weights --- */
@@ -71,9 +80,61 @@ double ArtificialNeuroNet::forward(vector<double> inputValues_) {
  *
  */
 bool ArtificialNeuroNet::train(vector<vector<double> > inputValues_, vector<double> expectedOutputValues_) {
-    log << SLevel(INFO) << "successfully trained artificial neural net with " <<
-           inputValues_.size() << " training samples." << endl;
-    // --- TODO -- dummy code ---
+    if ( (!checkValuesAreValid(inputValues_)) || (!checkValuesAreValid(inputValues_)) ) {
+        log << SLevel(ERROR) << "Aborted train because of invalid input-values or expected outputValues. " <<
+               "(Probably empty vectors or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]" << endl;
+        dbi->writeStatusOK(false);
+        return 0;
+    } else {
+
+        log << SLevel(INFO) << "successfully trained artificial neural net with " <<
+               inputValues_.size() << " training samples." << endl;
+        // --- TODO -- dummy code ---
+        return true;
+        // --- TODO -- dummy code ---
+    }
+}
+
+/**
+ * ArtificialNeuroNet::checkInputValuesAreValid
+ * @brief iterates inputValues_ and checks if they are valid values
+ * @param inputValues_ vector of double values to be checked
+ * @return returns false if values_ either contains no values or
+ *         contains values > INFLUXDB_MAX or values < INFLUXDB_MIN
+ *         otherwise true
+ *
+ */
+bool ArtificialNeuroNet::checkValuesAreValid(const vector<double> &values_) {
+    if (values_.size() == 0) {
+        return false;
+    } else {
+        for (int i = 0; i < values_.size() ; i++) {
+            if ( (values_[i] > INFLUXDB_MAX) || (values_[i] < INFLUXDB_MIN) )  {
+                return false;
+            }
+        }
+    }
     return true;
-    // --- TODO -- dummy code ---
+}
+
+/**
+ * ArtificialNeuroNet::checkInputValuesAreValid
+ * @brief iterates inputValues_ and checks if they are valid values
+ * @param inputValues_ vector of vector of double values to be checked
+ * @return returns false if values_ either contains no values or
+ *         contains values > INFLUXDB_MAX or values < INFLUXDB_MIN
+ *         otherwise true
+ *
+ */
+bool ArtificialNeuroNet::checkValuesAreValid(const vector<vector<double> > &values_) {
+    if (values_.size() == 0) {
+        return false;
+    } else {
+        for (int i = 0; i < values_.size() ; i++) {
+            if (!checkValuesAreValid(values_[i]))  {
+                return false;
+            }
+        }
+    }
+    return true;
 }

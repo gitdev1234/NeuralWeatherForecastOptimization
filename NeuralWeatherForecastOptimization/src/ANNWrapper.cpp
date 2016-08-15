@@ -15,14 +15,18 @@
  * @brief constructor of ANN-wrapper class, initializes LogWriter and ANN-objects
  *
  */
-ANNWrapper::ANNWrapper() {
+ANNWrapper::ANNWrapper(DBInterface *dbInterface_) {
     // create and initialize LogWriter-object
     log = LogWriter("ANNWrapper", PATH_OF_LOGFILE);
     log << SLevel(INFO) << "Initialized ANNWrapper" << endl;
 
+    // initialize DBInterface
+    dbi = dbInterface_;
+
     // initialize ANN-objects
-    ANNTemperature.init("ANNTemperature");
-    ANNAirPressure.init("ANNAirPressure");
+    ANNTemperature.init("ANNTemperature",dbi);
+    ANNAirPressure.init("ANNAirPressure",dbi);
+
 }
 
 /* --- train neuro nets --- */
@@ -36,7 +40,8 @@ void ANNWrapper::trainArtificialNeuroNets() {
 
     // --- TODO -- dummy code ---
     vector< vector<double> > inputValues;
-    vector<double> expectedOutputValues;
+    inputValues.push_back({INFLUXDB_MAX+1,INFLUXDB_MIN-1,0});
+    vector<double> expectedOutputValues = {INFLUXDB_MAX,INFLUXDB_MIN,0};
     ANNTemperature.train(inputValues,expectedOutputValues);
           ANNAirPressure.train(inputValues,expectedOutputValues);
     // --- TODO -- dummy code ---
@@ -53,7 +58,7 @@ DataBuffer ANNWrapper::calculateOutput() {
     DataBuffer result;
 
     // --- TODO -- dummy code ---
-    vector<double> inputValues;
+    vector<double> inputValues = {5};
     result.data["ANNTemperature"] = ANNTemperature.forward(inputValues);
     result.data["ANNAirPressure"] = ANNAirPressure.forward(inputValues);
     // --- TODO -- dummy code ---

@@ -13,6 +13,7 @@
 #include "ArtificialNeuroNet.h"
 #include "LogWriter.h"
 #include "Config.h"
+#include "DBInterface.h"
 
 /**
  * The ANNWrapper class
@@ -27,7 +28,7 @@
 class ANNWrapper {
     public:
         /* --- constructor / destructor --- */
-        ANNWrapper();
+        ANNWrapper(DBInterface* dbInterface_);
 
         /* --- train neuro nets --- */
         void trainArtificialNeuroNets();
@@ -41,6 +42,7 @@ class ANNWrapper {
 
         /* --- miscellaneous --- */
         LogWriter log;
+        DBInterface* dbi;
 };
 
 #endif // ANNWRAPPER_H
