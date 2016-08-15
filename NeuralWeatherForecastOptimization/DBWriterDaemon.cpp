@@ -16,8 +16,8 @@
  * @brief reads sensor-values and web-forecast and writes them to DB
  *
  */
-int main1() {
-//int main() {
+//int main1() {
+int main() {
     // --- TODO -- dummy code ---
     // randomize
     srand(time(NULL));
@@ -42,11 +42,8 @@ int main1() {
     AirPressure2MSensor.setSensorType(new AirPressureSensor());
 
     // read sensor values
-    DataBuffer SensorValuesBuffer;
-    SensorValuesBuffer.dataSource = "WeatherStation";
-    SensorValuesBuffer.useDataSource = true;
-    SensorValuesBuffer.data["Lufttemperatur_2m"] = AirTemperature2MSensor.readSensor();
-    SensorValuesBuffer.data["Luftdruck_2m"]      = AirPressure2MSensor.readSensor();
+    DataBuffer AirTemperature2MBuffer = AirTemperature2MSensor.readSensor();;
+    DataBuffer AirPressure2MBuffer    = AirPressure2MSensor.readSensor();
 
     // create webcontent - objects
     WebContent OpenWeatherMapForecast;
@@ -64,7 +61,8 @@ int main1() {
                                 " database, because of status is not okay." << endl;
     } else {
         // write sensor values to database
-        dbi.writeToDataBase(SensorValuesBuffer);
+        dbi.writeToDataBase(AirTemperature2MBuffer);
+        dbi.writeToDataBase(AirPressure2MBuffer);
         bool dbFailure = dbi.getDBFailure();
         if (!dbFailure) {
             log << SLevel(INFO) << "Succesfully wrote sensor-data to database." << endl;

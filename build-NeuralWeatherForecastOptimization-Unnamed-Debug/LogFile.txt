@@ -24887,3 +24887,17 @@
 15/08/16-13:53:47 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
 15/08/16-13:53:47 - INFO      - ForecastCalculator - Succesfully calculated optimized forecast.
 15/08/16-13:53:47 - INFO      - ForecastCalculator - Finished calculation of forecast. Elapsed Time : 0.000209 seconds.
+15/08/16-14:14:59 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
+15/08/16-14:14:59 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+15/08/16-14:15:00 - ERROR     - DBInterface - Aborted writing to database because there was either no DataSource specified or the useDataSource-flag was not set to true.
+15/08/16-14:15:00 - ERROR     - DBInterface - Aborted writing to database because there was either no DataSource specified or the useDataSource-flag was not set to true.
+15/08/16-14:15:00 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
+15/08/16-14:15:00 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+15/08/16-14:15:00 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.036652 seconds.
+15/08/16-14:19:39 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
+15/08/16-14:19:39 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+15/08/16-14:19:39 - ERROR     - DBInterface - Aborted writing to database because there was either no DataSource specified or the useDataSource-flag was not set to true.
+15/08/16-14:19:39 - ERROR     - DBInterface - Aborted writing to database because there was either no DataSource specified or the useDataSource-flag was not set to true.
+15/08/16-14:19:39 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
+15/08/16-14:19:39 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+15/08/16-14:19:39 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.025216 seconds.
