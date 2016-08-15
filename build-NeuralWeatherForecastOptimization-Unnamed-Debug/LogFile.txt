@@ -24901,3 +24901,8 @@
 15/08/16-14:19:39 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
 15/08/16-14:19:39 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
 15/08/16-14:19:39 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.025216 seconds.
+15/08/16-14:46:04 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+15/08/16-14:46:04 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+15/08/16-14:46:04 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+15/08/16-14:46:04 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+15/08/16-14:46:04 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.

@@ -16,8 +16,8 @@
  * @brief reads sensor-values and web-forecast and writes them to DB
  *
  */
-//int main1() {
-int main() {
+int main1() {
+//int main() {
     // --- TODO -- dummy code ---
     // randomize
     srand(time(NULL));
