@@ -37,7 +37,7 @@ class ArtificialNeuroNet {
         void init(string name_);
 
         /* --- pushing values forward (from input to output) --- */
-        vector<double> forward (vector<double> inputValues_);
+        double forward (vector<double> inputValues_);
 
         /* --- train / optimize weights --- */
         bool train (vector< vector<double> > inputValues_, vector<double> expectedOutputValues_);

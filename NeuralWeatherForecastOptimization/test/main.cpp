@@ -2,7 +2,7 @@
 #include "catch.hpp"
 #include <float.h>
 #include "DBInterface.h"
-/*
+
 
 // --- Tests for HTTP-REQUEST ---
 
@@ -172,7 +172,7 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
         REQUIRE(dbi.getDBFailure() == false);
     }*/
 
-/*
+
     SECTION ("write / read maximum / minimum values") {
         dataBuffer.startDateTime.tm_sec  = 0;   // seconds
         dataBuffer.startDateTime.tm_min  = 0;   // minutes
@@ -265,5 +265,3 @@ TEST_CASE ("Write / Read Status") {
     }
 }
 
-*/
-/* --- --- */

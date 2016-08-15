@@ -21,8 +21,8 @@ ANNWrapper::ANNWrapper() {
     log << SLevel(INFO) << "Initialized ANNWrapper" << endl;
 
     // initialize ANN-objects
-    AirTemperature2MForecast.init("AirTemperature2MForecast");
-          Humidity2MForecast.init("Humidity2MForecast");
+    ANNTemperature.init("ANNTemperature");
+    ANNAirPressure.init("ANNAirPressure");
 }
 
 /* --- train neuro nets --- */
@@ -37,8 +37,8 @@ void ANNWrapper::trainArtificialNeuroNets() {
     // --- TODO -- dummy code ---
     vector< vector<double> > inputValues;
     vector<double> expectedOutputValues;
-    AirTemperature2MForecast.train(inputValues,expectedOutputValues);
-          Humidity2MForecast.train(inputValues,expectedOutputValues);
+    ANNTemperature.train(inputValues,expectedOutputValues);
+          ANNAirPressure.train(inputValues,expectedOutputValues);
     // --- TODO -- dummy code ---
 }
 
@@ -54,8 +54,8 @@ DataBuffer ANNWrapper::calculateOutput() {
 
     // --- TODO -- dummy code ---
     vector<double> inputValues;
-    result.data["AirTemperature2MForecast"] = AirTemperature2MForecast.forward(inputValues)[0];
-    result.data[      "Humidity2MForecast"] =       Humidity2MForecast.forward(inputValues)[0];
+    result.data["ANNTemperature"] = ANNTemperature.forward(inputValues);
+    result.data["ANNAirPressure"] = ANNAirPressure.forward(inputValues);
     // --- TODO -- dummy code ---
 
     return result;

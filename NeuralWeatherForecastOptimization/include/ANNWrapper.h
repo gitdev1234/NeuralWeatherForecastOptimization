@@ -36,8 +36,8 @@ class ANNWrapper {
         DataBuffer calculateOutput();
     private:
         /* --- ANNs --- */
-        ArtificialNeuroNet AirTemperature2MForecast;
-        ArtificialNeuroNet Humidity2MForecast;
+        ArtificialNeuroNet ANNTemperature;
+        ArtificialNeuroNet ANNAirPressure;
 
         /* --- miscellaneous --- */
         LogWriter log;

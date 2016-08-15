@@ -10,6 +10,11 @@
  */
 int main2() {
 //int main() {
+    // --- TODO -- dummy code ---
+    // randomize
+    srand(time(NULL));
+    // --- TODO -- dummy code ---
+
     // create Log-Writer Object
     LogWriter log("ANNTrainingDaemon", PATH_OF_LOGFILE);
 

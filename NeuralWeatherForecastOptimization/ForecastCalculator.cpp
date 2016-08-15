@@ -8,8 +8,14 @@
  * @brief starts calculation of output within ANN-wrapper class and outputs optimized WeatherForecast
  *
  */
-int main3() {
-//int main() {
+//int main3() {
+int main() {
+    // --- TODO -- dummy code ---
+    // randomize
+    srand(time(NULL));
+    // --- TODO -- dummy code ---
+
+
     // create Log-Writer Object
     LogWriter log("ForecastCalculator", PATH_OF_LOGFILE);
 

@@ -31,11 +31,11 @@ void ArtificialNeuroNet::init(string name_){
  *
  * NOTICE : This is to use for nets with one to many input-neurons and one to many output-neurons
  */
-vector<double> ArtificialNeuroNet::forward(vector<double> inputValues_) {
-    vector<double> result;
+double ArtificialNeuroNet::forward(vector<double> inputValues_) {
+    double result;
 
     // --- TODO -- dummy code ---
-    result.push_back(rand() % 20);
+    result = rand() % 20;
     // --- TODO -- dummy code ---
 
     // return vector of values

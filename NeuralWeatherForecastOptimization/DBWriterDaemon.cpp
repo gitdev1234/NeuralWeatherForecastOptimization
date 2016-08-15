@@ -18,6 +18,11 @@
  */
 int main1() {
 //int main() {
+    // --- TODO -- dummy code ---
+    // randomize
+    srand(time(NULL));
+    // --- TODO -- dummy code ---
+
     // create Log-Writer Object
     LogWriter log("DBWriterDaemon", PATH_OF_LOGFILE);
     log << SLevel(INFO) << "Started writing sensor/forecast-data to database." << endl;

@@ -24857,3 +24857,33 @@
 15/08/16-00:45:58 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
 15/08/16-00:45:58 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
 15/08/16-00:45:58 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+15/08/16-13:51:38 - INFO      - ForecastCalculator - Started calculation of forecast.
+15/08/16-13:51:38 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-13:51:38 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-13:51:38 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-13:51:38 - INFO      - ForecastCalculator - Succesfully calculated optimized forecast.
+15/08/16-13:51:38 - INFO      - ForecastCalculator - Finished calculation of forecast. Elapsed Time : 0.000273 seconds.
+15/08/16-13:51:43 - INFO      - ForecastCalculator - Started calculation of forecast.
+15/08/16-13:51:43 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-13:51:43 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-13:51:43 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-13:51:43 - INFO      - ForecastCalculator - Succesfully calculated optimized forecast.
+15/08/16-13:51:43 - INFO      - ForecastCalculator - Finished calculation of forecast. Elapsed Time : 0.000213 seconds.
+15/08/16-13:53:41 - INFO      - ForecastCalculator - Started calculation of forecast.
+15/08/16-13:53:41 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-13:53:41 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-13:53:41 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-13:53:41 - INFO      - ForecastCalculator - Succesfully calculated optimized forecast.
+15/08/16-13:53:41 - INFO      - ForecastCalculator - Finished calculation of forecast. Elapsed Time : 0.0002 seconds.
+15/08/16-13:53:45 - INFO      - ForecastCalculator - Started calculation of forecast.
+15/08/16-13:53:45 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-13:53:45 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-13:53:45 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-13:53:45 - INFO      - ForecastCalculator - Succesfully calculated optimized forecast.
+15/08/16-13:53:45 - INFO      - ForecastCalculator - Finished calculation of forecast. Elapsed Time : 0.000212 seconds.
+15/08/16-13:53:47 - INFO      - ForecastCalculator - Started calculation of forecast.
+15/08/16-13:53:47 - INFO      - ANNWrapper - Initialized ANNWrapper
+15/08/16-13:53:47 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+15/08/16-13:53:47 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+15/08/16-13:53:47 - INFO      - ForecastCalculator - Succesfully calculated optimized forecast.
+15/08/16-13:53:47 - INFO      - ForecastCalculator - Finished calculation of forecast. Elapsed Time : 0.000209 seconds.
