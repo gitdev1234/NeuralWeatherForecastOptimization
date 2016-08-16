@@ -31,8 +31,8 @@ struct tm incHour(struct tm time_, int hourDelta_) {
  * @brief iterates through all data-points in influxDB and creates missing datapoints, using linear lines of best fit
  *
  */
-int main4() {
-//int main() {
+//int main4() {
+int main() {
     cout << "Hello World!" << endl;
 
     DataBuffer firstDataBuffer;
