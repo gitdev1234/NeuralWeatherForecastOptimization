@@ -24953,3 +24953,60 @@
 15/08/16-20:36:03 - ERROR     - ArtificialNeuroNet : test ann - Aborted train because of invalid input-values or expected outputValues. (Probably empty vectors or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
 15/08/16-20:36:03 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
 15/08/16-20:36:03 - INFO      - ArtificialNeuroNet : test ann - successfully trained artificial neural net with 1 training samples.
+16/08/16-02:18:39 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+16/08/16-02:18:39 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+16/08/16-02:18:40 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+16/08/16-02:18:40 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+16/08/16-02:18:40 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+16/08/16-02:18:45 - INFO      - ANNWrapper - Initialized ANNWrapper
+16/08/16-02:18:45 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+16/08/16-02:18:45 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+16/08/16-02:18:46 - INFO      - ANNWrapper - Initialized ANNWrapper
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+16/08/16-02:18:46 - INFO      - ANNWrapper - Successfully trained Artificial Neuro Net for Temperature 2m
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : ANNTemperature - successfully trained artificial neural net with 1 training samples.
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : ANNAirPressure - successfully trained artificial neural net with 1 training samples.
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+16/08/16-02:18:46 - ERROR     - ArtificialNeuroNet : test ann - Aborted forward because of invalid input-values. (Probably empty vector or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+16/08/16-02:18:46 - ERROR     - ArtificialNeuroNet : test ann - Aborted train because of invalid input-values or expected outputValues. (Probably empty vectors or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+16/08/16-02:18:46 - INFO      - ArtificialNeuroNet : test ann - successfully trained artificial neural net with 1 training samples.
+16/08/16-02:19:50 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+16/08/16-02:19:50 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+16/08/16-02:19:51 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+16/08/16-02:19:51 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+16/08/16-02:19:51 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+16/08/16-02:19:57 - INFO      - ANNWrapper - Initialized ANNWrapper
+16/08/16-02:19:57 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+16/08/16-02:19:57 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+16/08/16-02:19:58 - INFO      - ANNWrapper - Initialized ANNWrapper
+16/08/16-02:19:58 - INFO      - ArtificialNeuroNet : ANNTemperature - Initialized ArtificialNeuroNet with name of ANNTemperature.
+16/08/16-02:19:58 - INFO      - ArtificialNeuroNet : ANNAirPressure - Initialized ArtificialNeuroNet with name of ANNAirPressure.
+16/08/16-02:19:58 - INFO      - ANNWrapper - Successfully trained Artificial Neuro Net for Temperature 2m
+16/08/16-02:19:58 - INFO      - ArtificialNeuroNet : ANNTemperature - successfully trained artificial neural net with 1 training samples.
+16/08/16-02:19:58 - INFO      - ArtificialNeuroNet : ANNAirPressure - successfully trained artificial neural net with 1 training samples.
+16/08/16-02:19:58 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+16/08/16-02:19:58 - ERROR     - ArtificialNeuroNet : test ann - Aborted forward because of invalid input-values. (Probably empty vector or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
+16/08/16-02:19:58 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+16/08/16-02:19:58 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+16/08/16-02:19:58 - ERROR     - ArtificialNeuroNet : test ann - Aborted train because of invalid input-values or expected outputValues. (Probably empty vectors or values out of range [INFLUXDB_MIN..INFLUXDB_MAX]
+16/08/16-02:19:59 - INFO      - ArtificialNeuroNet : test ann - Initialized ArtificialNeuroNet with name of test ann.
+16/08/16-02:19:59 - INFO      - ArtificialNeuroNet : test ann - successfully trained artificial neural net with 1 training samples.
+16/08/16-02:20:52 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
+16/08/16-02:20:52 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+16/08/16-02:20:57 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
+16/08/16-02:20:57 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+16/08/16-02:20:57 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.04192 seconds.
+16/08/16-02:22:02 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
+16/08/16-02:22:02 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+16/08/16-02:22:06 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
+16/08/16-02:22:06 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+16/08/16-02:22:06 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.046685 seconds.
+16/08/16-02:25:43 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
+16/08/16-02:25:43 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+16/08/16-02:25:48 - INFO      - DBWriterDaemon - Succesfully wrote sensor-data to database.
+16/08/16-02:25:48 - INFO      - DBWriterDaemon - Succesfully wrote forecast-data to database.
+16/08/16-02:25:48 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.038391 seconds.

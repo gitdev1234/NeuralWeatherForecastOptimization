@@ -17,7 +17,14 @@
 using namespace std;
 // --- TODO -- dummy code ---
 
+#include <QString>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QDateTime>
+// --
 #include "WebContentType.h"
+#include "HTTPRequest.h"
 
 /**
  * OpenWeatherMap class
@@ -30,10 +37,13 @@ using namespace std;
 class OpenWeatherMap : public WebContentType {
     public:
         /* --- constructor --- */
-        OpenWeatherMap() {};
+        OpenWeatherMap();
 
         /* --- measuring --- */
         DataBuffer readWebContent ();
+    private:
+        DataBuffer jsonToDataBuffer(const string& jsonString_);
+        LogWriter log;
 };
 
 #endif // OPENWEATHERMAP_H

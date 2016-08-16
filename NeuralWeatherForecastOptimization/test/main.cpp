@@ -318,11 +318,6 @@ TEST_CASE("readWebContent works") {
     // todo
     dbi.writeStatusOK(true);
 
-    // --- TODO -- dummy code ---
-    // randomize
-    srand(time(NULL));
-    // --- TODO -- dummy code ---
-
     SECTION("readWebContent works for OpenWeatherMap") {
         WebContent WebContent1;
         WebContent1.setWebContentType(new OpenWeatherMap());
@@ -332,6 +327,12 @@ TEST_CASE("readWebContent works") {
         REQUIRE(openWeatherMapBuffer.data["Lufttemperatur_2m"] <  2000);
         REQUIRE(openWeatherMapBuffer.data["Luftdruck_2m"] > -2000);
         REQUIRE(openWeatherMapBuffer.data["Luftdruck_2m"] <  2000);
+        REQUIRE(openWeatherMapBuffer.data["RelativeLuftfeuchte_2m"] > -2000);
+        REQUIRE(openWeatherMapBuffer.data["RelativeLuftfeuchte_2m"] <  2000);
+        REQUIRE(openWeatherMapBuffer.data["Windgeschwindigkeit"] > -2000);
+        REQUIRE(openWeatherMapBuffer.data["Windgeschwindigkeit"] <  2000);
+        REQUIRE(openWeatherMapBuffer.data["Windrichtung"] > -2000);
+        REQUIRE(openWeatherMapBuffer.data["Windrichtung"] <  2000);
         REQUIRE(dbi.readStatusOK());
     }
 }
