@@ -25,6 +25,7 @@ using namespace std;
 // --
 #include "WebContentType.h"
 #include "HTTPRequest.h"
+#include "Config.h"
 
 /**
  * OpenWeatherMap class

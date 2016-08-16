@@ -38,7 +38,8 @@ SOURCES += DBWriterDaemon.cpp \
     src/SLevel.cpp \
     src/TemperatureSensor.cpp \
     ArchiveDataPreprocessor.cpp \
-    test/main.cpp
+    test/main.cpp \
+    src/Third-Party-Code/DS18B20.cpp
 
 
 HEADERS += \
