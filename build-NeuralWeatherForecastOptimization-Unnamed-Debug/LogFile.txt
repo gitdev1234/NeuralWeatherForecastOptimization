@@ -25012,3 +25012,5 @@
 16/08/16-02:25:48 - INFO      - DBWriterDaemon - Finished writing sensor/forecast-data to database. Elapsed Time : 0.038391 seconds.
 16/08/16-06:25:46 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
 16/08/16-06:25:46 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+16/08/16-13:57:15 - INFO      - DBWriterDaemon - Started writing sensor/forecast-data to database.
+16/08/16-13:57:15 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.

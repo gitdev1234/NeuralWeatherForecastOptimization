@@ -59,6 +59,7 @@ DataBuffer OpenWeatherMap::jsonToDataBuffer(const string &jsonString_) {
     qint64 searchedUnixTime = dateTime.toMSecsSinceEpoch() / 1000.0;
 
     // set attributes of databuffer
+    dateTime = dateTime.addSecs(-60*60*2);
     result.startDateTime.tm_year = dateTime.date().year();
     result.startDateTime.tm_mon  = dateTime.date().month();
     result.startDateTime.tm_mday = dateTime.date().day();
