@@ -12,13 +12,13 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_CORE_LIB
+DEFINES       = -DCPU_ONLY=1 -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I../NeuralWeatherForecastOptimization -I../NeuralWeatherForecastOptimization/include -I../include/ -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I.
+INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I../NeuralWeatherForecastOptimization -I../NeuralWeatherForecastOptimization/include -I../include/ -I/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include -I/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/distribute/include -I../NeuralWeatherForecastOptimization/include -I/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/build -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I.
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -lcurl -lQt5Core -lpthread 
+LIBS          = $(SUBLIBS) -lcurl -lboost_system -lglog -lprotobuf -L/home/anon/Desktop/SoSe_16/Bachelor-Thesis/Code/Main/NeuralWeatherForecastOptimization/../../../../../CleanMonthly/caffe_repo/caffe/build/lib/ -lcaffe -lQt5Core -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
@@ -182,7 +182,7 @@ first: all
 
 all: Makefile $(TARGET)
 
-$(TARGET):  $(OBJECTS)  
+$(TARGET): /home/anon/Desktop/SoSe_16/Bachelor-Thesis/Code/Main/NeuralWeatherForecastOptimization/../../../../../CleanMonthly/caffe_repo/caffe/build/lib/libcaffe.a $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../NeuralWeatherForecastOptimization/NeuralWeatherForecastOptimization.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmake.conf /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -370,7 +370,30 @@ ANNTrainingDaemon.o: ../NeuralWeatherForecastOptimization/ANNTrainingDaemon.cpp 
 		../NeuralWeatherForecastOptimization/include/ArtificialNeuroNet.h \
 		../NeuralWeatherForecastOptimization/include/Config.h \
 		../NeuralWeatherForecastOptimization/include/DBInterface.h \
-		../NeuralWeatherForecastOptimization/include/HTTPRequest.h
+		../NeuralWeatherForecastOptimization/include/HTTPRequest.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/caffe.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/blob.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/common.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/device_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/cudnn.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/distribute/include/caffe/proto/caffe.pb.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/syncedmem.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/filler.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/math_functions.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/mkl_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/net.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/parallel.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/internal_thread.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/blocking_queue.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/benchmark.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/io.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/format.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/upgrade_proto.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/sgd_solvers.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ANNTrainingDaemon.o ../NeuralWeatherForecastOptimization/ANNTrainingDaemon.cpp
 
 ForecastCalculator.o: ../NeuralWeatherForecastOptimization/ForecastCalculator.cpp ../NeuralWeatherForecastOptimization/include/LogWriter.h \
@@ -380,7 +403,30 @@ ForecastCalculator.o: ../NeuralWeatherForecastOptimization/ForecastCalculator.cp
 		../NeuralWeatherForecastOptimization/include/ArtificialNeuroNet.h \
 		../NeuralWeatherForecastOptimization/include/Config.h \
 		../NeuralWeatherForecastOptimization/include/DBInterface.h \
-		../NeuralWeatherForecastOptimization/include/HTTPRequest.h
+		../NeuralWeatherForecastOptimization/include/HTTPRequest.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/caffe.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/blob.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/common.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/device_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/cudnn.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/distribute/include/caffe/proto/caffe.pb.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/syncedmem.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/filler.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/math_functions.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/mkl_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/net.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/parallel.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/internal_thread.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/blocking_queue.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/benchmark.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/io.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/format.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/upgrade_proto.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/sgd_solvers.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ForecastCalculator.o ../NeuralWeatherForecastOptimization/ForecastCalculator.cpp
 
 DataBuffer.o: ../NeuralWeatherForecastOptimization/src/DataBuffer.cpp ../NeuralWeatherForecastOptimization/include/DataBuffer.h
@@ -412,7 +458,30 @@ ArtificialNeuroNet.o: ../NeuralWeatherForecastOptimization/src/ArtificialNeuroNe
 		../NeuralWeatherForecastOptimization/include/SLevel.h \
 		../NeuralWeatherForecastOptimization/include/DBInterface.h \
 		../NeuralWeatherForecastOptimization/include/DataBuffer.h \
-		../NeuralWeatherForecastOptimization/include/HTTPRequest.h
+		../NeuralWeatherForecastOptimization/include/HTTPRequest.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/caffe.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/blob.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/common.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/device_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/cudnn.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/distribute/include/caffe/proto/caffe.pb.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/syncedmem.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/filler.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/math_functions.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/mkl_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/net.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/parallel.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/internal_thread.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/blocking_queue.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/benchmark.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/io.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/format.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/upgrade_proto.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/sgd_solvers.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ArtificialNeuroNet.o ../NeuralWeatherForecastOptimization/src/ArtificialNeuroNet.cpp
 
 AirPressureSensor.o: ../NeuralWeatherForecastOptimization/src/AirPressureSensor.cpp ../NeuralWeatherForecastOptimization/include/AirPressureSensor.h \
@@ -427,7 +496,30 @@ ANNWrapper.o: ../NeuralWeatherForecastOptimization/src/ANNWrapper.cpp ../NeuralW
 		../NeuralWeatherForecastOptimization/include/LogWriter.h \
 		../NeuralWeatherForecastOptimization/include/SLevel.h \
 		../NeuralWeatherForecastOptimization/include/DBInterface.h \
-		../NeuralWeatherForecastOptimization/include/HTTPRequest.h
+		../NeuralWeatherForecastOptimization/include/HTTPRequest.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/caffe.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/blob.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/common.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/device_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/cudnn.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/distribute/include/caffe/proto/caffe.pb.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/syncedmem.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/filler.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/math_functions.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/mkl_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/net.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/parallel.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/internal_thread.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/blocking_queue.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/benchmark.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/io.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/format.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/upgrade_proto.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/sgd_solvers.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ANNWrapper.o ../NeuralWeatherForecastOptimization/src/ANNWrapper.cpp
 
 DBInterface.o: ../NeuralWeatherForecastOptimization/src/DBInterface.cpp ../NeuralWeatherForecastOptimization/include/DBInterface.h \
@@ -481,7 +573,30 @@ main.o: ../NeuralWeatherForecastOptimization/test/main.cpp ../NeuralWeatherForec
 		../NeuralWeatherForecastOptimization/include/WebContentType.h \
 		../NeuralWeatherForecastOptimization/include/OpenWeatherMap.h \
 		../NeuralWeatherForecastOptimization/include/ANNWrapper.h \
-		../NeuralWeatherForecastOptimization/include/ArtificialNeuroNet.h
+		../NeuralWeatherForecastOptimization/include/ArtificialNeuroNet.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/caffe.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/blob.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/common.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/device_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/cudnn.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/distribute/include/caffe/proto/caffe.pb.h \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/syncedmem.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/filler.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/math_functions.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/mkl_alternate.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/layer_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/net.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/parallel.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/internal_thread.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/solver_factory.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/blocking_queue.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/benchmark.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/io.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/format.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/util/upgrade_proto.hpp \
+		/home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/caffe/sgd_solvers.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../NeuralWeatherForecastOptimization/test/main.cpp
 
 ####### Install

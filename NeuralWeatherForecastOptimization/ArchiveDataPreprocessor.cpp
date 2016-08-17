@@ -25,7 +25,7 @@ struct tm incHour(struct tm time_, int hourDelta_) {
 }
 
 void preProcessArchiveData(string nameToPreProcess_);
-void   createMissingForecastDataWithWeatherStationPlusMeanError(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, string dataSourceToCompareWith_ , int stepWidth_, struct tm startDate_, struct tm endDate_);
+void   createMissingForecastDataWithWeatherStationPlusMeanError(string nameOfValueToAnalyze_, double meanError_, string dataSourceToAnalyze_, string dataSourceToCompareWith_ , int stepWidth_, struct tm startDate_, struct tm endDate_);
 double analyzeMissingData(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, string dataSourceToCompareWith_ , int stepWidth_, struct tm startDate_, struct tm endDate_);
 void   createMissingForecastDataWithSlopeOfNeighbours(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, tm startDate_, tm endDate_) ;
 void   createErrorMeasurement(string nameOfValueToAnalyze_);
@@ -72,7 +72,7 @@ void preProcessArchiveData(string nameToPreProcess_) {
     startDateTime.tm_min  = 0;
     startDateTime.tm_sec  = 0;
 
-    // create end date time
+    // create end date times
     struct tm endDateTime;
     endDateTime.tm_year = 2016;
     endDateTime.tm_mon  = 7;
@@ -81,12 +81,14 @@ void preProcessArchiveData(string nameToPreProcess_) {
     endDateTime.tm_min  = 0;
     endDateTime.tm_sec  = 0;
 
+    double meanError = analyzeMissingData(nameToPreProcess_,"Forecast","WeatherStation",3,startDateTime,endDateTime);
+
     cout << "started creating missing values for by weather station plus mean error" << endl;
-    //createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,"Forecast","WeatherStation",3,startDateTime,endDateTime);
+    //createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,meanError,"Forecast","WeatherStation",3,startDateTime,endDateTime);
     cout << "finished" << endl;
     cout << "started creating missing values for by slope of neighbours" << endl;
     endDateTime.tm_hour = 18;
-    createMissingForecastDataWithSlopeOfNeighbours(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
+    //createMissingForecastDataWithSlopeOfNeighbours(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
     endDateTime.tm_hour = 21;
     cout << "finished" << endl;
 
@@ -98,10 +100,11 @@ void preProcessArchiveData(string nameToPreProcess_) {
     startDateTime2.tm_min  = 0;
     startDateTime2.tm_sec  = 0;
     struct tm endDateTime2 = endDateTime;
-    endDateTime2.tm_hour = 23;
+    endDateTime2.tm_mday = endDateTime.tm_mday + 1;
+    endDateTime2.tm_hour = 0;
 
     cout << "started creating missing values for last day" << endl;
-    createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,"Forecast","WeatherStation",1,startDateTime2,endDateTime2);
+    createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,meanError,"Forecast","WeatherStation",1,startDateTime2,endDateTime2);
     cout << "finished" << endl;
 
     cout << "started analyzation if everything is complete" << endl;
@@ -124,10 +127,8 @@ void preProcessArchiveData(string nameToPreProcess_) {
  * every missing data-point in forecast measurement with
  * forecast-value = WeatherStationValue + meanError
  */
-void createMissingForecastDataWithWeatherStationPlusMeanError(string nameOfValueToAnalyze_,
+void createMissingForecastDataWithWeatherStationPlusMeanError(string nameOfValueToAnalyze_, double meanError_,
      string dataSourceToAnalyze_, string dataSourceToCompareWith_ , int stepWidth_, struct tm startDate_, struct tm endDate_) {
-    double meanError = analyzeMissingData(nameOfValueToAnalyze_,dataSourceToAnalyze_,dataSourceToCompareWith_,3,startDate_,endDate_);
-    //double meanError = -1.03303;
 
     // create and init singleton-DBInterface-object
     DBInterface& dbi = DBInterface::getInstance();
@@ -171,7 +172,7 @@ void createMissingForecastDataWithWeatherStationPlusMeanError(string nameOfValue
                 double valueWeatherStation = resultWeatherStation.data()->data[nameOfValueToAnalyze_];
                 DataBuffer newForecastValueForMissingDate = WeatherStationBuffer;
                 newForecastValueForMissingDate.dataSource = dataSourceToAnalyze_;
-                newForecastValueForMissingDate.data[nameOfValueToAnalyze_] = valueWeatherStation + meanError;
+                newForecastValueForMissingDate.data[nameOfValueToAnalyze_] = valueWeatherStation + meanError_;
                 dbi.writeToDataBase(newForecastValueForMissingDate);
                 if (dbi.getDBFailure()) {
                     cout << "Error during inserting" << endl;
@@ -198,6 +199,7 @@ void createMissingForecastDataWithWeatherStationPlusMeanError(string nameOfValue
  */
 double analyzeMissingData(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, string dataSourceToCompareWith_ , int stepWidth_, struct tm startDate_, struct tm endDate_) {
 
+    cout << "started analyzing missing data" << endl;
     // create and init singleton-DBInterface-object
     DBInterface& dbi = DBInterface::getInstance();
     // todo
@@ -284,6 +286,8 @@ double analyzeMissingData(string nameOfValueToAnalyze_, string dataSourceToAnaly
 
     cout << "mean  of error : " << mean << endl;
     cout << "stdev of error : " << stdev << endl;
+
+    cout << "finished" << endl;
 
     return mean;
 

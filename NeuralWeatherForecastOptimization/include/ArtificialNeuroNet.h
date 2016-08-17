@@ -15,7 +15,16 @@
 #include "Config.h"
 #include "LogWriter.h"
 #include "DBInterface.h"
+// caffe
+#include "caffe/caffe.hpp"
+#include "caffe/util/io.hpp"
+#include "caffe/blob.hpp"
+#include "caffe/common.hpp"
+#include "caffe/sgd_solvers.hpp"
+#include "caffe/solver.hpp"
+#include "google/protobuf/text_format.h"
 
+using namespace caffe;
 using namespace std;
 
 
@@ -44,6 +53,14 @@ class ArtificialNeuroNet {
         bool train (vector< vector<double> > inputValues_, vector<double> expectedOutputValues_);
 
 private:
+        // artificial neural net
+        Net<double> *net;
+        caffe::shared_ptr<Solver<double> > solver_;
+        // paths of important files
+        string netStructurePrototxtPath;
+        string trainedWeightsCaffemodelPath;
+        string solverParametersPrototxtPath;
+
         /* --- miscellaneous --- */
         LogWriter log;
         bool checkValuesAreValid(const vector<double> &values_);

@@ -21,6 +21,17 @@ INCLUDEPATH += ../include/
 
 LIBS += -lcurl
 
+DEFINES += CPU_ONLY=1
+
+INCLUDEPATH += /home/anon/Desktop/CleanMonthly/caffe_repo/caffe/include/
+INCLUDEPATH += /home/anon/Desktop/CleanMonthly/caffe_repo/caffe/distribute/include/
+INCLUDEPATH += include/
+
+LIBS += -lboost_system
+LIBS += -lglog
+LIBS += -lprotobuf
+
+
 
 SOURCES += DBWriterDaemon.cpp \
     ANNTrainingDaemon.cpp \
@@ -60,3 +71,10 @@ HEADERS += \
     include/SensorType.h \
     include/SLevel.h \
     include/TemperatureSensor.h
+
+unix:!macx: LIBS += -L$$PWD/../../../../../CleanMonthly/caffe_repo/caffe/build/lib/ -lcaffe
+
+INCLUDEPATH += $$PWD/../../../../../CleanMonthly/caffe_repo/caffe/build
+DEPENDPATH += $$PWD/../../../../../CleanMonthly/caffe_repo/caffe/build
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../CleanMonthly/caffe_repo/caffe/build/lib/libcaffe.a
