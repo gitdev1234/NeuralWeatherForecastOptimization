@@ -24,8 +24,8 @@ ANNWrapper::ANNWrapper(DBInterface *dbInterface_) {
     dbi = dbInterface_;
 
     // initialize ANN-objects
-    ANNTemperature.init("ANNTemperature",dbi);
-    ANNAirPressure.init("ANNAirPressure",dbi);
+    ANNTemperature.init("ANNTemperature",dbi,PATH_OF_NET_STRUCTURE_WITHOUT_LOSS,"",PATH_OF_NET_SOLVER);
+    ANNAirPressure.init("ANNAirPressure",dbi,PATH_OF_NET_STRUCTURE_WITHOUT_LOSS,"",PATH_OF_NET_SOLVER);
 
 }
 
@@ -58,7 +58,7 @@ DataBuffer ANNWrapper::calculateOutput() {
     DataBuffer result;
 
     // --- TODO -- dummy code ---
-    vector<double> inputValues = {5};
+    vector<double> inputValues = {1,2,3,4,1,2,3,4,1,2};
     result.data["ANNTemperature"] = ANNTemperature.forward(inputValues);
     result.data["ANNAirPressure"] = ANNAirPressure.forward(inputValues);
     // --- TODO -- dummy code ---

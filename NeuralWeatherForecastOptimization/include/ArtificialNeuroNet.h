@@ -43,8 +43,18 @@ using namespace std;
 class ArtificialNeuroNet {
     public:
         /* --- constructors / initialization / destructors --- */
-        ArtificialNeuroNet(){};
-        void init(string name_, DBInterface *dbInterface_);
+        ArtificialNeuroNet() {};
+        void init(const string &name_, DBInterface *dbInterface_, const string &netStructurePrototxtPath_,
+                  const string &trainedWeightsCaffemodelPath_, const string &solverParametersPrototxtPath_);
+
+        /* --- getter / setter --- */
+        string getNetStructurePrototxtPath     () const {return netStructurePrototxtPath     ;};
+        string getTrainedWeightsCaffemodelPath () const {return trainedWeightsCaffemodelPath ;};
+        string getSolverParametersPrototxtPath () const {return solverParametersPrototxtPath ;};
+
+        void setNetStructurePrototxtPath     (const string& val_) {netStructurePrototxtPath     = val_;};
+        void setTrainedWeightsCaffemodelPath (const string& val_) {trainedWeightsCaffemodelPath = val_;};
+        void setSolverParametersPrototxtPath (const string& val_) {solverParametersPrototxtPath = val_;};
 
         /* --- pushing values forward (from input to output) --- */
         double forward (vector<double> inputValues_);
@@ -66,6 +76,10 @@ private:
         bool checkValuesAreValid(const vector<double> &values_);
         bool checkValuesAreValid(const vector<vector<double>> &values_);
         DBInterface* dbi;
+
+        /* --- miscellaneous --- */
+        void  setDataOfBLOB(Blob<double>* blobToModify_,int indexNum_, int indexChannel_, int indexHeight_, int indexWidth_, double value_);
+        double getDataOfBLOB(Blob<double>* blobToReadFrom_, int indexNum_, int indexChannel_, int indexHeight_, int indexWidth_);
 
 };
 

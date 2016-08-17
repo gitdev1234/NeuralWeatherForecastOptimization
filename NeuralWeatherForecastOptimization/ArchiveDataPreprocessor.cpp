@@ -35,8 +35,8 @@ void   createErrorMeasurement(string nameOfValueToAnalyze_);
  * @brief iterates through all data-points in influxDB and creates missing datapoints, using linear lines of best fit
  *
  */
-//int main4() {
-int main() {
+int main4() {
+//int main() {
     cout << "started with preProcessing of Lufttemperatur_2m" << endl;
     //preProcessArchiveData("Lufttemperatur_2m");
     cout << "finished" << endl;
@@ -44,10 +44,10 @@ int main() {
     // //preProcessArchiveData("Niederschlagshoehe");
     cout << "finished" << endl;
     cout << "started with preProcessing of RelativeLuftfeuchte_2m" << endl;
-    preProcessArchiveData("RelativeLuftfeuchte_2m");
+    //preProcessArchiveData("RelativeLuftfeuchte_2m");
     cout << "finished" << endl;
     cout << "started with preProcessing of Temperatur_Im_Boden_Minus_5cm" << endl;
-    preProcessArchiveData("Temperatur_Im_Boden_Minus_5cm");
+    // //preProcessArchiveData("Temperatur_Im_Boden_Minus_5cm");
     cout << "finished" << endl;
     cout << "started with preProcessing of Windgeschwindigkeit_Stundenmittel" << endl;
     preProcessArchiveData("Windgeschwindigkeit_Stundenmittel");
@@ -84,11 +84,11 @@ void preProcessArchiveData(string nameToPreProcess_) {
     double meanError = analyzeMissingData(nameToPreProcess_,"Forecast","WeatherStation",3,startDateTime,endDateTime);
 
     cout << "started creating missing values for by weather station plus mean error" << endl;
-    //createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,meanError,"Forecast","WeatherStation",3,startDateTime,endDateTime);
+    createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,meanError,"Forecast","WeatherStation",3,startDateTime,endDateTime);
     cout << "finished" << endl;
     cout << "started creating missing values for by slope of neighbours" << endl;
     endDateTime.tm_hour = 18;
-    //createMissingForecastDataWithSlopeOfNeighbours(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
+    createMissingForecastDataWithSlopeOfNeighbours(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
     endDateTime.tm_hour = 21;
     cout << "finished" << endl;
 

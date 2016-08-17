@@ -384,7 +384,7 @@ TEST_CASE("ArtificialNeuroNet forward works") {
     // --- TODO -- dummy code ---
 
     ArtificialNeuroNet ann;
-    ann.init("test ann",&dbi);
+    ann.init("test ann",&dbi,PATH_OF_NET_STRUCTURE_WITHOUT_LOSS,"",PATH_OF_NET_SOLVER);
 
     SECTION("empty inputValues_ works") {
         REQUIRE(ann.forward({}) == 0);
@@ -420,7 +420,7 @@ TEST_CASE("ArtificialNeuroNet train works") {
     // --- TODO -- dummy code ---
 
     ArtificialNeuroNet ann;
-    ann.init("test ann",&dbi);
+    ann.init("test ann",&dbi,PATH_OF_NET_STRUCTURE_WITHOUT_LOSS,"",PATH_OF_NET_SOLVER);
 
     SECTION("empty inputValues_ works") {
         ann.train({},{});

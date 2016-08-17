@@ -1,0 +1,92 @@
+name: 'CaffeNet'
+layer {
+  name: 'data'
+  type: 'Input'
+  top: 'data'
+  top: 'label'
+  input_param { shape: { dim: 1 dim: 10 dim: 1 dim: 1 } }
+}
+layer {
+  name: 'inputLayer'
+  type: 'InnerProduct'
+  bottom: 'data'
+  top: 'inputLayer'
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedInputLayer'
+  type: 'TanH'
+  bottom: 'inputLayer'
+  top: 'activatedInputLayer'
+}
+layer {
+  name: 'hiddenLayer1'
+  type: 'InnerProduct'
+  bottom: 'activatedInputLayer'
+  top: 'hiddenLayer1'
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedHiddenLayer1'
+  type: 'TanH'
+  bottom: 'hiddenLayer1'
+  top: 'activatedHiddenLayer1'
+}
+layer {
+  name: 'hiddenLayer2'
+  type: 'InnerProduct'
+  bottom: 'activatedHiddenLayer1'
+  top: 'hiddenLayer2'
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedHiddenLayer2'
+  type: 'TanH'
+  bottom: 'hiddenLayer2'
+  top: 'activatedHiddenLayer2'
+}
+layer {
+  name: 'outputLayer'
+  type: 'InnerProduct'
+  bottom: 'activatedHiddenLayer2'
+  top: 'outputLayer'
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedOutputLayer'
+  type: 'TanH'
+  bottom: 'outputLayer'
+  top: 'activatedOutputLayer'
+}
