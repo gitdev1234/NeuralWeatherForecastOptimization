@@ -24,7 +24,8 @@ struct tm incHour(struct tm time_, int hourDelta_) {
     return time_;
 }
 
-void fillMissingForecastDataWithWeatherStationPlusStdDevOfError();
+void   fillMissingForecastDataWithWeatherStationPlusStdDevOfError(string nameOfValueToAnalyze_);
+double analyzeMissingData(string nameOfValueToAnalyze_);
 
 /**
  * main of ArchiveDataPreprocessor
@@ -39,20 +40,20 @@ int main() {
     LogWriter log("ArchiveDataPreprocessor", PATH_OF_LOGFILE+"x");
 
 
-    fillMissingForecastDataWithWeatherStationPlusStdDevOfError();
+    fillMissingForecastDataWithWeatherStationPlusStdDevOfError("Lufttemperatur_2m");
 
     return 0;
 }
 
-void fillMissingForecastDataWithWeatherStationPlusStdDevOfError() {
+void fillMissingForecastDataWithWeatherStationPlusStdDevOfError(string nameOfValueToAnalyze_) {
+    //double meanError = analyzeMissingData(nameOfValueToAnalyze_);
+    double meanError = -1.03303;
 
     // create and init singleton-DBInterface-object
     DBInterface& dbi = DBInterface::getInstance();
     // todo
     dbi.init();
     dbi.writeStatusOK(true);
-/*
-    string name = "Lufttemperatur_2m";
 
     DataBuffer WeatherStationBuffer;
     WeatherStationBuffer.startDateTime.tm_year = 2014;
@@ -65,7 +66,220 @@ void fillMissingForecastDataWithWeatherStationPlusStdDevOfError() {
     WeatherStationBuffer.useDateTimes = true;
     WeatherStationBuffer.dataSource = "WeatherStation";
     WeatherStationBuffer.useDataSource = true;
-    WeatherStationBuffer.data[name] = 0;
+    WeatherStationBuffer.data[nameOfValueToAnalyze_] = 0;
+
+    bool lastDateReached = false;
+
+    // iterate through data and generate missing
+    while (!lastDateReached) {
+        DataBuffer ForecastBuffer = WeatherStationBuffer;
+        ForecastBuffer.dataSource = "Forecast";
+        if ( (WeatherStationBuffer.startDateTime.tm_year >= 2016) &&
+             (WeatherStationBuffer.startDateTime.tm_mon  >= 7   ) &&
+             (WeatherStationBuffer.startDateTime.tm_mday >= 16  ) &&
+             (WeatherStationBuffer.startDateTime.tm_hour >= 21  ) &&
+             (WeatherStationBuffer.startDateTime.tm_min  >= 0   ) &&
+             (WeatherStationBuffer.startDateTime.tm_sec  >= 0   ) ){
+            lastDateReached = true;
+        }
+
+        vector<DataBuffer> resultWeatherStation = dbi.readFromDataBase(WeatherStationBuffer);
+        vector<DataBuffer> resultForecast       = dbi.readFromDataBase(ForecastBuffer);
+
+        if ( (resultWeatherStation.size() > 0) && (resultForecast.size() == 0 ) ) {
+            double valueWeatherStation = resultWeatherStation.data()->data[nameOfValueToAnalyze_];
+            DataBuffer newForecastValueForMissingDate = WeatherStationBuffer;
+            newForecastValueForMissingDate.dataSource = "Forecast";
+            newForecastValueForMissingDate.data[nameOfValueToAnalyze_] = valueWeatherStation + meanError;
+            dbi.writeToDataBase(newForecastValueForMissingDate);
+            if (dbi.getDBFailure()) {
+                cout << "Error during inserting" << endl;
+            }
+
+        }
+
+        WeatherStationBuffer.startDateTime = incHour(WeatherStationBuffer.startDateTime,3);
+        WeatherStationBuffer.endDateTime   = WeatherStationBuffer.startDateTime;
+    }
+}
+
+/**
+ * @brief analyzeMissingData
+ * @return returns mean error
+ */
+double analyzeMissingData(string nameOfValueToAnalyze_) {
+
+    // create and init singleton-DBInterface-object
+    DBInterface& dbi = DBInterface::getInstance();
+    // todo
+    dbi.init();
+    dbi.writeStatusOK(true);
+
+    DataBuffer normalValueBuffer;
+    normalValueBuffer.startDateTime.tm_year = 2014;
+    normalValueBuffer.startDateTime.tm_mon  = 8;
+    normalValueBuffer.startDateTime.tm_mday = 19;
+    normalValueBuffer.startDateTime.tm_hour = 0;
+    normalValueBuffer.startDateTime.tm_min  = 0;
+    normalValueBuffer.startDateTime.tm_sec  = 0;
+    normalValueBuffer.endDateTime = normalValueBuffer.startDateTime;
+    normalValueBuffer.useDateTimes = true;
+    normalValueBuffer.dataSource = "WeatherStation";
+    normalValueBuffer.useDataSource = true;
+    normalValueBuffer.data[nameOfValueToAnalyze_] = 0;
+
+    bool lastDateReached = false;
+    vector<double> ErrorValues;
+    int dataCountTotal                      = 0;
+    int dataCountMissingFromWeatherStation  = 0;
+    int dataCountMissingFromForecast        = 0;
+    int dataCountMissingFromBoth            = 0;
+
+    // get standard deviation
+    while (!lastDateReached) {
+        DataBuffer ForecastBuffer = normalValueBuffer;
+        ForecastBuffer.dataSource = "Forecast";
+        if ( (normalValueBuffer.startDateTime.tm_year >= 2016) &&
+             (normalValueBuffer.startDateTime.tm_mon  >= 7   ) &&
+             (normalValueBuffer.startDateTime.tm_mday >= 16  ) &&
+             (normalValueBuffer.startDateTime.tm_hour >= 21  ) &&
+             (normalValueBuffer.startDateTime.tm_min  >= 0   ) &&
+             (normalValueBuffer.startDateTime.tm_sec  >= 0   ) ){
+            lastDateReached = true;
+        }
+
+        vector<DataBuffer> resultWeatherStation = dbi.readFromDataBase(normalValueBuffer);
+        vector<DataBuffer> resultForecast       = dbi.readFromDataBase(ForecastBuffer);
+
+
+
+        if ( (resultWeatherStation.size() > 0) && (resultForecast.size() > 0 ) ) {
+            double valueWeatherStation = resultWeatherStation.data()->data[nameOfValueToAnalyze_];
+            double valueForecast       =       resultForecast.data()->data[nameOfValueToAnalyze_];
+            double Error = valueWeatherStation - valueForecast;
+            ErrorValues.push_back(Error);
+
+        } else {
+            if (resultWeatherStation.size() == 0) {
+                dataCountMissingFromWeatherStation++;
+            }
+            if (resultForecast.size() == 0) {
+                dataCountMissingFromForecast++;
+            }
+            if ( (resultWeatherStation.size() == 0) && (resultForecast.size() == 0) ) {
+                dataCountMissingFromBoth++;
+            }
+        }
+
+        dataCountTotal++;
+        if (dataCountTotal % 100 == 0) {
+            cout << "iterated " << dataCountTotal << " dates" << endl;
+        }
+
+        normalValueBuffer.startDateTime = incHour(normalValueBuffer.startDateTime,3);
+        normalValueBuffer.endDateTime   = normalValueBuffer.startDateTime;
+
+    }
+
+    cout << "total data count : " << dataCountTotal << endl;
+    cout << "missing weatherstation data count : " << dataCountMissingFromWeatherStation <<
+             "this is " << double(dataCountMissingFromWeatherStation) / double(dataCountTotal) * 100.0 << "%" << endl;
+    cout << "missing forecast       data count : " << dataCountMissingFromForecast <<
+            "this is " << double(dataCountMissingFromForecast) / double(dataCountTotal) * 100.0 << "%" << endl;
+    cout << "missing both           data count : " << dataCountMissingFromBoth <<
+            "this is " << double(dataCountMissingFromBoth) / double(dataCountTotal) * 100.0 << "%" << endl;
+
+    double sum = std::accumulate(ErrorValues.begin(), ErrorValues.end(), 0.0);
+    double mean = sum / ErrorValues.size();
+
+    double sq_sum = std::inner_product(ErrorValues.begin(), ErrorValues.end(), ErrorValues.begin(), 0.0);
+    double stdev = std::sqrt(sq_sum / ErrorValues.size() - mean * mean);
+
+    cout << "mean  of error : " << mean << endl;
+    cout << "stdev of error : " << stdev << endl;
+
+    return mean;
+
+}
+
+
+void createErrorMeasurement(string nameOfValueToAnalyze_) {
+
+    // create and init singleton-DBInterface-object
+    DBInterface& dbi = DBInterface::getInstance();
+    // todo
+    dbi.init();
+    dbi.writeStatusOK(true);
+
+    DataBuffer WeatherStationBuffer;
+    WeatherStationBuffer.startDateTime.tm_year = 2014;
+    WeatherStationBuffer.startDateTime.tm_mon  = 8;
+    WeatherStationBuffer.startDateTime.tm_mday = 19;
+    WeatherStationBuffer.startDateTime.tm_hour = 0;
+    WeatherStationBuffer.startDateTime.tm_min  = 0;
+    WeatherStationBuffer.startDateTime.tm_sec  = 0;
+    WeatherStationBuffer.endDateTime = WeatherStationBuffer.startDateTime;
+    WeatherStationBuffer.useDateTimes = true;
+    WeatherStationBuffer.dataSource = "WeatherStation";
+    WeatherStationBuffer.useDataSource = true;
+    WeatherStationBuffer.data[nameOfValueToAnalyze_] = 0;
+
+    bool lastDateReached = false;
+    vector<double> ErrorValues;
+
+    // get standard deviation
+    while (!lastDateReached) {
+        DataBuffer ForecastBuffer = WeatherStationBuffer;
+        ForecastBuffer.dataSource = "Forecast";
+        if ( (WeatherStationBuffer.startDateTime.tm_year >= 2016) &&
+             (WeatherStationBuffer.startDateTime.tm_mon  >= 7   ) &&
+             (WeatherStationBuffer.startDateTime.tm_mday >= 16  ) &&
+             (WeatherStationBuffer.startDateTime.tm_hour >= 21  ) &&
+             (WeatherStationBuffer.startDateTime.tm_min  >= 0   ) &&
+             (WeatherStationBuffer.startDateTime.tm_sec  >= 0   ) ){
+            lastDateReached = true;
+        }
+
+        vector<DataBuffer> resultWeatherStation = dbi.readFromDataBase(WeatherStationBuffer);
+        vector<DataBuffer> resultForecast       = dbi.readFromDataBase(ForecastBuffer);
+
+        if ( (resultWeatherStation.size() > 0) && (resultForecast.size() > 0 ) ) {
+            double valueWeatherStation = resultWeatherStation.data()->data[nameOfValueToAnalyze_];
+            double valueForecast       =       resultForecast.data()->data[nameOfValueToAnalyze_];
+            double Error = valueWeatherStation - valueForecast;
+            DataBuffer ErrorBuffer = WeatherStationBuffer;
+            WeatherStationBuffer.dataSource = "Error";
+            ErrorBuffer.data[nameOfValueToAnalyze_] = Error;
+            dbi.writeToDataBase(ErrorBuffer);
+            if (dbi.getDBFailure()) {
+                cout << "Error during insert" << endl;
+            }
+        }
+        WeatherStationBuffer.startDateTime = incHour(WeatherStationBuffer.startDateTime,1);
+        WeatherStationBuffer.endDateTime   = WeatherStationBuffer.startDateTime;
+    }
+}
+
+void createSlopeMeasurement(string nameOfValueToAnalyze_, string dataSource_) {
+
+    // create and init singleton-DBInterface-object
+    DBInterface& dbi = DBInterface::getInstance();
+    // todo
+    dbi.init();
+    dbi.writeStatusOK(true);
+
+    DataBuffer WeatherStationBuffer;
+    WeatherStationBuffer.startDateTime.tm_year = 2014;
+    WeatherStationBuffer.startDateTime.tm_mon  = 8;
+    WeatherStationBuffer.startDateTime.tm_mday = 19;
+    WeatherStationBuffer.startDateTime.tm_hour = 0;
+    WeatherStationBuffer.startDateTime.tm_min  = 0;
+    WeatherStationBuffer.startDateTime.tm_sec  = 0;
+    WeatherStationBuffer.endDateTime = WeatherStationBuffer.startDateTime;
+    WeatherStationBuffer.useDateTimes = true;
+    WeatherStationBuffer.dataSource = "WeatherStation";
+    WeatherStationBuffer.useDataSource = true;
+    WeatherStationBuffer.data[nameOfValueToAnalyze_] = 0;
 
     bool lastDateReached = false;
     vector<double> ErrorValues;
@@ -93,61 +307,18 @@ void fillMissingForecastDataWithWeatherStationPlusStdDevOfError() {
 
 
         if ( (resultWeatherStation.size() > 0) && (resultForecast.size() > 0 ) ) {
-            double valueWeatherStation = resultWeatherStation.data()->data[name];
-            double valueForecast       =       resultForecast.data()->data[name];
+            double valueWeatherStation = resultWeatherStation.data()->data[nameOfValueToAnalyze_];
+            double valueForecast       =       resultForecast.data()->data[nameOfValueToAnalyze_];
             double Error = valueWeatherStation - valueForecast;
-            //cout << valueWeatherStation << " , " << valueForecast << " , " << Error << endl;
-            ErrorValues.push_back(Error);
-
-        } else {
-            if (resultWeatherStation.size() == 0) {
-                dataCountMissingFromWeatherStation++;
-            }
-            if (resultForecast.size() == 0) {
-                dataCountMissingFromForecast++;
-            }
-            if ( (resultWeatherStation.size() == 0) && (resultForecast.size() == 0) ) {
-                dataCountMissingFromBoth++;
+            DataBuffer ErrorBuffer = WeatherStationBuffer;
+            WeatherStationBuffer.dataSource = "Error";
+            dbi.writeToDataBase(ErrorBuffer);
+            if (dbi.getDBFailure()) {
+                cout << "Error during insert" << endl;
             }
         }
-
-        dataCountTotal++;
-        if (dataCountTotal % 100 == 0) {
-            cout << "iterated " << dataCountTotal << " dates" << endl;
-        }
-
-        WeatherStationBuffer.startDateTime = incHour(WeatherStationBuffer.startDateTime,3);
-        WeatherStationBuffer.endDateTime   = WeatherStationBuffer.startDateTime;
-
     }
-
-    cout << "total data count : " << dataCountTotal << endl;
-    cout << "missing weatherstation data count : " << dataCountMissingFromWeatherStation << endl;
-    cout << "missing forecast       data count : " << dataCountMissingFromForecast << endl;
-    cout << "missing both           data count : " << dataCountMissingFromBoth << endl;
-
-    double sum = std::accumulate(ErrorValues.begin(), ErrorValues.end(), 0.0);
-    double mean = sum / ErrorValues.size();
-
-    double sq_sum = std::inner_product(ErrorValues.begin(), ErrorValues.end(), ErrorValues.begin(), 0.0);
-    double stdev = std::sqrt(sq_sum / ErrorValues.size() - mean * mean);
-
-    cout << "mean  of error : " << mean << endl;
-    cout << "stdev of error : " << stdev << endl;
-
-    */
-
-    vector<double> test = {1,2,3}; //,2,3,4,5};
-    double sq_sum2 = std::inner_product(test.begin(), test.end(), test.begin(), 0.0);
-    cout << "sq_sum2 : " << sq_sum2 << endl;
-
-    /*
-    double sumOfSquareErrors = 0;
-    for (int i = 0; i < squaredErrorValues.size(); i++) {
-        sumOfSquareErrors += squaredErrorValues[i] * squaredErrorValues[i];
-    }*/
 }
-
 
 /*
     firstDataBuffer.startDateTime.tm_year = 2014;
@@ -238,3 +409,4 @@ void fillMissingForecastDataWithWeatherStationPlusStdDevOfError() {
 
     return 0;
 } */
+
