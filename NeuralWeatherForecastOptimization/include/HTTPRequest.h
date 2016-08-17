@@ -10,7 +10,6 @@
 /**
  * HTTPRequest class
  * @brief The HTTPRequest class provides methods for executing http-post and http-get requests
- * ! Attention ! This class uses the system command.
  */
 class HTTPRequest{
     public:
