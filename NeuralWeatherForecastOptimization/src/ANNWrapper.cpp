@@ -40,11 +40,22 @@ void ANNWrapper::trainArtificialNeuroNets() {
 
     // --- TODO -- dummy code ---
     vector< vector<double> > inputValues;
-    inputValues.push_back({0.1,0.2,0.3,0.4,0.1,0.2});
-    inputValues.push_back({0.2,0.3,0.4,0.1,0.2,0.3});
-    inputValues.push_back({0.3,0.4,0.1,0.2,0.3,0.4});
-    inputValues.push_back({0.4,0.1,0.2,0.3,0.4,0.1});
-    vector<double> expectedOutputValues = {0.3, 0.4, 0.1, 0.2};
+    inputValues.push_back({0.1,0.0,0.2,0.1,0.3,0.2});
+    inputValues.push_back({0.0,0.2,0.1,0.3,0.2,0.4});
+    inputValues.push_back({0.2,0.1,0.3,0.2,0.4,0.3});
+    inputValues.push_back({0.1,0.3,0.2,0.4,0.3,0.5});
+    inputValues.push_back({0.3,0.2,0.4,0.3,0.5,0.4});
+    inputValues.push_back({0.2,0.4,0.3,0.5,0.4,0.6});
+    inputValues.push_back({0.4,0.3,0.5,0.4,0.6,0.5});
+    // ---
+    inputValues.push_back({0.3,0.5,0.4,0.6,0.5,0.1});
+    inputValues.push_back({0.5,0.4,0.6,0.5,0.1,0.0});
+    inputValues.push_back({0.4,0.6,0.5,0.1,0.0,0.2});
+    inputValues.push_back({0.6,0.5,0.1,0.0,0.2,0.1});
+    inputValues.push_back({0.5,0.1,0.0,0.2,0.1,0.3});
+    vector<double> expectedOutputValues = {0.4,0.3,0.5,0.4,0.6,0.5,0.1,0.0,0.2,0.1,0.3,0.2};
+
+
     ANNTemperature.train(inputValues,expectedOutputValues);
     //ANNAirPressure.train(inputValues,expectedOutputValues);
     // --- TODO -- dummy code ---
@@ -61,10 +72,19 @@ DataBuffer ANNWrapper::calculateOutput() {
     DataBuffer result;
 
     // --- TODO -- dummy code ---
-    //vector<double> inputValues = {0.1,0.2,0.3,0.4,0.1,0.2};
-    //vector<double> inputValues = {0.2,0.3,0.4,0.1,0.2,0.3};
-    //vector<double> inputValues = {0.3,0.4,0.1,0.2,0.3,0.4};
-    vector<double> inputValues = {0.4,0.1,0.2,0.3,0.4,0.1};
+    //vector<double> inputValues = {0.1,0.0,0.2,0.1,0.3,0.2};
+    //vector<double> inputValues = {0.0,0.2,0.1,0.3,0.2,0.4};
+    //vector<double> inputValues = {0.2,0.1,0.3,0.2,0.4,0.3};
+    //vector<double> inputValues = {0.1,0.3,0.2,0.4,0.3,0.5};
+    //vector<double> inputValues = {0.3,0.2,0.4,0.3,0.5,0.4};
+    //vector<double> inputValues = {0.2,0.4,0.3,0.5,0.4,0.6};
+    //vector<double> inputValues = {0.4,0.3,0.5,0.4,0.6,0.5};
+    // ---
+    //vector<double> inputValues = {0.3,0.5,0.4,0.6,0.5,0.1};
+    //vector<double> inputValues = {0.5,0.4,0.6,0.5,0.1,0.0};
+    //vector<double> inputValues = {0.4,0.6,0.5,0.1,0.0,0.2};
+    //vector<double> inputValues = {0.6,0.5,0.1,0.0,0.2,0.1};
+    vector<double> inputValues = {0.5,0.1,0.0,0.2,0.1,0.3};
     ANNTemperature.setTrainedWeightsCaffemodelPath(PATH_OF_TRAINED_WEIGHTS);
     result.data["ANNTemperature"] = ANNTemperature.forward(inputValues);
     result.data["ANNAirPressure"] = ANNAirPressure.forward(inputValues);
