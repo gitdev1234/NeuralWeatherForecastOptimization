@@ -38,15 +38,14 @@ ANNWrapper::ANNWrapper(DBInterface *dbInterface_) {
 void ANNWrapper::trainArtificialNeuroNets() {
     log << SLevel(INFO) << "Successfully trained Artificial Neuro Net for Temperature 2m" << endl;
 
-    // --- TODO -- dummy code ---
     vector< vector<double> > inputValues;
-    vector<double> expectedOutputValues = {0.4,0.3,0.5,0.4,0.6,0.5,0.1,0.0,0.2,0.1,0.3,0.2};
+    vector<double> expectedOutputValues;
     generateDataSets(&inputValues,&expectedOutputValues);
 
 
     ANNTemperature.train(inputValues,expectedOutputValues);
+    // TODO
     //ANNAirPressure.train(inputValues,expectedOutputValues);
-    // --- TODO -- dummy code ---
 }
 
 /* --- calculate forecast outputs --- */
@@ -60,21 +59,14 @@ DataBuffer ANNWrapper::calculateOutput() {
     DataBuffer result;
 
     // --- TODO -- dummy code ---
-    //vector<double> inputValues = {0.1,0.0,0.2,0.1,0.3,0.2};
-    //vector<double> inputValues = {0.0,0.2,0.1,0.3,0.2,0.4};
-    //vector<double> inputValues = {0.2,0.1,0.3,0.2,0.4,0.3};
-    //vector<double> inputValues = {0.1,0.3,0.2,0.4,0.3,0.5};
-    //vector<double> inputValues = {0.3,0.2,0.4,0.3,0.5,0.4};
-    vector<double> inputValues = {0.2,0.4,0.3,0.5,0.4,0.6};
-    //vector<double> inputValues = {0.4,0.3,0.5,0.4,0.6,0.5};
-    // ---
-    //vector<double> inputValues = {0.3,0.5,0.4,0.6,0.5,0.1};
-    //vector<double> inputValues = {0.5,0.4,0.6,0.5,0.1,0.0};
-    //vector<double> inputValues = {0.4,0.6,0.5,0.1,0.0,0.2};
-    //vector<double> inputValues = {0.6,0.5,0.1,0.0,0.2,0.1};
-    //vector<double> inputValues = {0.5,0.1,0.0,0.2,0.1,0.3};
+    vector< vector<double> > inputValuesALL;
+    vector<double> expectedOutputValuesALL;
+    generateDataSets(&inputValuesALL,&expectedOutputValuesALL);
+    vector<double> inputValues = inputValuesALL[inputValuesALL.size()-1];
+
     ANNTemperature.setTrainedWeightsCaffemodelPath(PATH_OF_TRAINED_WEIGHTS);
     result.data["ANNTemperature"] = ANNTemperature.forward(inputValues);
+    cout << "ExpectedOutput for temperature : " << expectedOutputValuesALL[expectedOutputValuesALL.size()-1] << endl;
     result.data["ANNAirPressure"] = ANNAirPressure.forward(inputValues);
     // --- TODO -- dummy code ---
 
@@ -136,22 +128,41 @@ void ANNWrapper::generateDataSets(vector<vector<double> > *inputValues_, vector<
             // make sure data is not of evalution training set
             if (!checkIfTrainingsSetIndexIsAEvaluationIndex(trainingSetIndex)) {
                 // make sure there is enought previous data
-                if (trainingSetIndex >= PREDICTION_WINDOW_SIZE-1) {
+                // and that there is a expected output data
+                if ( (trainingSetIndex >= PREDICTION_WINDOW_SIZE - 1) &&
+                     (trainingSetIndex <= TOTAL_NUMBER_OF_TRAINING_SAMPLES - DISTANCE_OF_PREDICTION - 1) ){
                     // go from current position backwards to get current data and
                     // all needed previous data
-                    for (int predictionWindowIndex = trainingSetIndex; predictionWindowIndex > trainingSetIndex - PREDICTION_WINDOW_SIZE + 1; predictionWindowIndex--) {
+                    for (int predictionWindowIndex = trainingSetIndex; predictionWindowIndex >= trainingSetIndex - PREDICTION_WINDOW_SIZE + 1; predictionWindowIndex--) {
                         vector<double> inputValuesOfCurrentDataSource;
                         typedef std::map<string, double>::iterator it_type;
                         for(it_type iterator = trainingSetBuffer[predictionWindowIndex].data.begin(); iterator != trainingSetBuffer[predictionWindowIndex].data.end(); iterator++) {
+                            // get input value
                             inputValuesOfCurrentDataSource.push_back(iterator->second);
                         }
                         vector<double> tempVector = inputValues_->at(trainingSetIndex);
                         tempVector.insert(tempVector.end(),inputValuesOfCurrentDataSource.begin(),inputValuesOfCurrentDataSource.end());
                         inputValues_->at(trainingSetIndex) = tempVector;
                     }
-
+                    // get expected output value
+                    int indexOfExpectedOutput = trainingSetIndex + DISTANCE_OF_PREDICTION;
+                    expectedOutputValues_->at(trainingSetIndex) =  trainingSetBuffer[indexOfExpectedOutput].data[PREDICTANT];
                 }
             }
+        }
+    }
+
+    vector<vector<double>>::iterator i = inputValues_->begin();
+    vector<double>::iterator i2 = expectedOutputValues_->begin();
+    int index = 0;
+    while(i != inputValues_->end()) {
+        if(inputValues_->at(index).size() == 0) {
+            i = inputValues_->erase(i);
+            i2 = expectedOutputValues_->erase(i2);
+        } else {
+            ++i;
+            ++i2;
+            index++;
         }
     }
 
