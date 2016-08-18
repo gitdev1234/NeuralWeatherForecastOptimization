@@ -1,0 +1,142 @@
+name: 'CaffeNet'
+layer {
+  name: 'data'
+  type: 'Input'
+  top: 'data'
+  top: 'label'
+  input_param { shape: { dim: 4 dim: 6 dim: 1 dim: 1 } }
+}
+layer {
+  name: 'inputLayer'
+  type: 'InnerProduct'
+  bottom: 'data'
+  top: 'inputLayer'
+  inner_product_param {
+    num_output: 30
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedInputLayer'
+  type: 'ReLU'
+  bottom: 'inputLayer'
+  top: 'activatedInputLayer'
+}
+layer {
+  name: 'hiddenLayer1'
+  type: 'InnerProduct'
+  bottom: 'activatedInputLayer'
+  top: 'hiddenLayer1'
+  inner_product_param {
+    num_output: 30
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedHiddenLayer1'
+  type: 'ReLU'
+  bottom: 'hiddenLayer1'
+  top: 'activatedHiddenLayer1'
+}
+layer {
+  name: 'hiddenLayer2'
+  type: 'InnerProduct'
+  bottom: 'activatedHiddenLayer1'
+  top: 'hiddenLayer2'
+  inner_product_param {
+    num_output: 30
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedHiddenLayer2'
+  type: 'ReLU'
+  bottom: 'hiddenLayer2'
+  top: 'activatedHiddenLayer2'
+}
+layer {
+  name: 'hiddenLayer3'
+  type: 'InnerProduct'
+  bottom: 'activatedHiddenLayer2'
+  top: 'hiddenLayer3'
+  inner_product_param {
+    num_output: 30
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedHiddenLayer3'
+  type: 'ReLU'
+  bottom: 'hiddenLayer3'
+  top: 'activatedHiddenLayer3'
+}
+layer {
+  name: 'hiddenLayer4'
+  type: 'InnerProduct'
+  bottom: 'activatedHiddenLayer3'
+  top: 'hiddenLayer4'
+  inner_product_param {
+    num_output: 30
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedHiddenLayer4'
+  type: 'ReLU'
+  bottom: 'hiddenLayer4'
+  top: 'activatedHiddenLayer4'
+}
+layer {
+  name: 'outputLayer'
+  type: 'InnerProduct'
+  bottom: 'activatedHiddenLayer4'
+  top: 'outputLayer'
+  inner_product_param {
+    num_output: 6
+    weight_filler {
+      type: 'xavier'
+    }
+    bias_filler {
+      type: 'constant'
+    }
+  }
+}
+layer {
+  name: 'activatedOutputLayer'
+  type: 'ReLU'
+  bottom: 'outputLayer'
+  top: 'activatedOutputLayer'
+}
+layer {
+  name: 'loss'
+  type: 'EuclideanLoss'
+  bottom: 'activatedOutputLayer'
+  bottom: 'label'
+  top: 'loss'
+}
+

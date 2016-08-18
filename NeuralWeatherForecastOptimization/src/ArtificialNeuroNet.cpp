@@ -178,7 +178,8 @@ bool ArtificialNeuroNet::train(vector<vector<double> > inputValues_, vector<doub
             } else {
 
                 // create solver by parameter
-                solver_.reset(new SGDSolver<double>(param));
+                //solver_.reset(new SGDSolver<double>(param));
+                solver_.reset(new AdaGradSolver<double>(param));
 
                 // load weights
                 string trainedWeightsCaffemodelPath_l = getTrainedWeightsCaffemodelPath();

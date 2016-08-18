@@ -35,8 +35,8 @@ void   createErrorMeasurement(string nameOfValueToAnalyze_);
  * @brief iterates through all data-points in influxDB and creates missing datapoints, using linear lines of best fit
  *
  */
-int main4() {
-//int main() {
+//int main4() {
+int main() {
     cout << "started with preProcessing of Lufttemperatur_2m" << endl;
     //preProcessArchiveData("Lufttemperatur_2m");
     cout << "finished" << endl;
