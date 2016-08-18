@@ -29,6 +29,7 @@ void   createMissingForecastDataWithWeatherStationPlusMeanError(string nameOfVal
 double analyzeMissingData(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, string dataSourceToCompareWith_ , int stepWidth_, struct tm startDate_, struct tm endDate_);
 void   createMissingForecastDataWithSlopeOfNeighbours(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, tm startDate_, tm endDate_) ;
 void   createErrorMeasurement(string nameOfValueToAnalyze_);
+void createSlopeMeasurement(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_);
 
 /**
  * main of ArchiveDataPreprocessor
@@ -38,13 +39,13 @@ void   createErrorMeasurement(string nameOfValueToAnalyze_);
 //int main4() {
 int main() {
     cout << "started with preProcessing of Lufttemperatur_2m" << endl;
-    //preProcessArchiveData("Lufttemperatur_2m");
+    preProcessArchiveData("Lufttemperatur_2m");
     cout << "finished" << endl;
     cout << "started with preProcessing of Niederschlagshoehe" << endl;
     // //preProcessArchiveData("Niederschlagshoehe");
     cout << "finished" << endl;
     cout << "started with preProcessing of RelativeLuftfeuchte_2m" << endl;
-    //preProcessArchiveData("RelativeLuftfeuchte_2m");
+    preProcessArchiveData("RelativeLuftfeuchte_2m");
     cout << "finished" << endl;
     cout << "started with preProcessing of Temperatur_Im_Boden_Minus_5cm" << endl;
     // //preProcessArchiveData("Temperatur_Im_Boden_Minus_5cm");
@@ -81,14 +82,14 @@ void preProcessArchiveData(string nameToPreProcess_) {
     endDateTime.tm_min  = 0;
     endDateTime.tm_sec  = 0;
 
-    double meanError = analyzeMissingData(nameToPreProcess_,"Forecast","WeatherStation",3,startDateTime,endDateTime);
+    //double meanError = analyzeMissingData(nameToPreProcess_,"Forecast","WeatherStation",3,startDateTime,endDateTime);
 
     cout << "started creating missing values for by weather station plus mean error" << endl;
-    createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,meanError,"Forecast","WeatherStation",3,startDateTime,endDateTime);
+    //createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,meanError,"Forecast","WeatherStation",3,startDateTime,endDateTime);
     cout << "finished" << endl;
     cout << "started creating missing values for by slope of neighbours" << endl;
     endDateTime.tm_hour = 18;
-    createMissingForecastDataWithSlopeOfNeighbours(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
+    //createMissingForecastDataWithSlopeOfNeighbours(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
     endDateTime.tm_hour = 21;
     cout << "finished" << endl;
 
@@ -104,15 +105,27 @@ void preProcessArchiveData(string nameToPreProcess_) {
     endDateTime2.tm_hour = 0;
 
     cout << "started creating missing values for last day" << endl;
-    createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,meanError,"Forecast","WeatherStation",1,startDateTime2,endDateTime2);
+    //createMissingForecastDataWithWeatherStationPlusMeanError(nameToPreProcess_,meanError,"Forecast","WeatherStation",1,startDateTime2,endDateTime2);
     cout << "finished" << endl;
 
     cout << "started analyzation if everything is complete" << endl;
-    analyzeMissingData(nameToPreProcess_,"Forecast","WeatherStation",1,startDateTime,endDateTime);
+    //analyzeMissingData(nameToPreProcess_,"Forecast","WeatherStation",1,startDateTime,endDateTime);
     cout << "finished" << endl;
 
     cout << "started creating Error Measurement" << endl;
-    createErrorMeasurement(nameToPreProcess_);
+    //createErrorMeasurement(nameToPreProcess_);
+    cout << "finished" << endl;
+
+    cout << "started creating slope measurement for weather station " << endl;
+    createSlopeMeasurement(nameToPreProcess_,"WeatherStation",startDateTime,endDateTime);
+    cout << "finished" << endl;
+
+    cout << "started creating slope measurement for forecast" << endl;
+    createSlopeMeasurement(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
+    cout << "finished" << endl;
+
+    cout << "started creating slope measurement for forecast" << endl;
+    createSlopeMeasurement(nameToPreProcess_,"Error",startDateTime,endDateTime);
     cout << "finished" << endl;
 
     cout << "Finished preprocessing" << endl;
@@ -357,6 +370,110 @@ void createErrorMeasurement(string nameOfValueToAnalyze_) {
         WeatherStationBuffer.startDateTime = incHour(WeatherStationBuffer.startDateTime,1);
         WeatherStationBuffer.endDateTime   = WeatherStationBuffer.startDateTime;
     }
+}
+
+void createSlopeMeasurement(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_) {
+
+    // create and init singleton-DBInterface-object
+    DBInterface& dbi = DBInterface::getInstance();
+    // todo
+    dbi.init();
+    dbi.writeStatusOK(true);
+
+    DataBuffer CurrentBuffer;
+    CurrentBuffer.startDateTime = startDate_;
+    CurrentBuffer.endDateTime = CurrentBuffer.startDateTime;
+    CurrentBuffer.useDateTimes = true;
+    CurrentBuffer.dataSource = dataSourceToAnalyze_;
+    CurrentBuffer.useDataSource = true;
+    CurrentBuffer.data[nameOfValueToAnalyze_] = 0;
+
+    bool lastDateReached = false;
+    int dataCountTotal = 0;
+
+    CurrentBuffer.endDateTime   = CurrentBuffer.startDateTime;
+
+    while (!lastDateReached) {
+        DataBuffer ForecastBuffer = CurrentBuffer;
+        ForecastBuffer.dataSource = "Forecast";
+        if ( (CurrentBuffer.startDateTime.tm_year >= endDate_.tm_year) &&
+             (CurrentBuffer.startDateTime.tm_mon  >= endDate_.tm_mon ) &&
+             (CurrentBuffer.startDateTime.tm_mday >= endDate_.tm_mday) &&
+             (CurrentBuffer.startDateTime.tm_hour >= endDate_.tm_hour) &&
+             (CurrentBuffer.startDateTime.tm_min  >= endDate_.tm_min ) &&
+             (CurrentBuffer.startDateTime.tm_sec  >= endDate_.tm_sec ) ){
+            lastDateReached = true;
+        }
+
+        DataBuffer PreviousDataBuffer = CurrentBuffer;
+        PreviousDataBuffer.startDateTime = incHour(PreviousDataBuffer.startDateTime,-1);
+        PreviousDataBuffer.endDateTime   = PreviousDataBuffer.startDateTime;
+        DataBuffer NextDataBuffer = CurrentBuffer;
+        NextDataBuffer.startDateTime = incHour(NextDataBuffer.startDateTime,1);
+        NextDataBuffer.endDateTime   = NextDataBuffer.startDateTime;
+
+        vector<DataBuffer> resultPrevious = dbi.readFromDataBase(PreviousDataBuffer);
+        vector<DataBuffer> resultNext     = dbi.readFromDataBase(NextDataBuffer);
+
+        if ( (resultPrevious.size() > 0) && (resultNext.size() > 0 ) ) {
+            double previousValue = resultPrevious.data()->data[nameOfValueToAnalyze_];
+            double nextValue     =     resultNext.data()->data[nameOfValueToAnalyze_];
+            double slope         = double(nextValue - previousValue) / 3.0;
+
+            DataBuffer SlopeBuffer = CurrentBuffer;
+            SlopeBuffer.dataSource = "Slope"+CurrentBuffer.dataSource;
+            SlopeBuffer.data[nameOfValueToAnalyze_] = slope;
+            dbi.writeToDataBase(SlopeBuffer);
+            if (dbi.getDBFailure()) {
+                cout << "Error during insert" << endl;
+            }
+        }
+
+        // count all values existing or not existing
+        dataCountTotal++;
+        if (dataCountTotal % 100 == 0) {
+            cout << "iterated " << dataCountTotal << " dates" << endl;
+        }
+
+        CurrentBuffer.startDateTime = incHour(CurrentBuffer.startDateTime,1);
+        CurrentBuffer.endDateTime   = CurrentBuffer.startDateTime;
+    }
+
+    // add slope for very first value by using second
+    DataBuffer SlopeBuffer = CurrentBuffer;
+    SlopeBuffer.startDateTime = incHour(startDate_,1);
+    SlopeBuffer.endDateTime = SlopeBuffer.startDateTime;
+    SlopeBuffer.dataSource = "Slope";
+    vector<DataBuffer> resultSecond = dbi.readFromDataBase(SlopeBuffer);
+    if (resultSecond.size() > 0) {
+        SlopeBuffer.startDateTime = startDate_;
+        SlopeBuffer.endDateTime   = SlopeBuffer.startDateTime;
+        SlopeBuffer.dataSource = "Slope"+CurrentBuffer.dataSource;
+        SlopeBuffer.data[nameOfValueToAnalyze_] = resultSecond.data()->data[nameOfValueToAnalyze_];
+        dbi.writeToDataBase(SlopeBuffer);
+        if (dbi.getDBFailure()) {
+            cout << "Error during insert" << endl;
+        }
+    }
+
+    // add slope for very last value by using the one before the last
+    SlopeBuffer = CurrentBuffer;
+    SlopeBuffer.startDateTime = incHour(endDate_,-1);
+    SlopeBuffer.endDateTime = SlopeBuffer.startDateTime;
+    SlopeBuffer.dataSource = "Slope";
+    vector<DataBuffer> resultBeforeLast = dbi.readFromDataBase(SlopeBuffer);
+    if (resultBeforeLast.size() > 0) {
+        SlopeBuffer.startDateTime = endDate_;
+        SlopeBuffer.endDateTime   = SlopeBuffer.startDateTime;
+        SlopeBuffer.dataSource = "Slope"+CurrentBuffer.dataSource;
+        SlopeBuffer.data[nameOfValueToAnalyze_] = resultBeforeLast.data()->data[nameOfValueToAnalyze_];
+        dbi.writeToDataBase(SlopeBuffer);
+        if (dbi.getDBFailure()) {
+            cout << "Error during insert" << endl;
+        }
+    }
+
+
 }
 
 
