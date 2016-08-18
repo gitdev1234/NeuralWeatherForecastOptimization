@@ -61,8 +61,7 @@ double ArtificialNeuroNet::forward(vector<double> inputValues_) {
 
         // load weights
         string trainedWeightsCaffemodelPath_l = getTrainedWeightsCaffemodelPath();
-        if (trainedWeightsCaffemodelPath_l != "") { // TODO
-            trainedWeightsCaffemodelPath_l = "/home/anon/Desktop/PrivateProjects/Programming/C++/Caffe_Deep_Learning_Framework/Caffe_FunctionApproximation/build-caffe_FunctionApproximation-Unnamed-Debug/train_iter_450000.caffemodel";
+        if (trainedWeightsCaffemodelPath_l != "") {
             net->CopyTrainedLayersFrom(trainedWeightsCaffemodelPath_l);
         }
 
@@ -144,6 +143,122 @@ bool ArtificialNeuroNet::train(vector<vector<double> > inputValues_, vector<doub
         dbi->writeStatusOK(false);
         return 0;
     } else {
+
+        if (inputValues_.size() != expectedOutputValues_.size()) {
+            cout << "Error : inputValues_ and expectedOutputValues_ have different lengths" << endl;
+            return false;
+        } else {
+            SolverParameter param;
+            switch (Caffe::mode()) {
+              case Caffe::CPU:
+                param.set_solver_mode(SolverParameter_SolverMode_CPU);
+                break;
+              case Caffe::GPU:
+                param.set_solver_mode(SolverParameter_SolverMode_GPU);
+                break;
+              default:
+                LOG(FATAL) << "Unknown Caffe mode: " << Caffe::mode();
+            }
+
+            // --- read solver parameters from file ---
+
+            // read file into string
+            std::ifstream iFile;
+            iFile.open(getSolverParametersPrototxtPath());
+            stringstream sstr;
+            sstr << iFile.rdbuf();
+            string str;
+            str = sstr.str();
+            cout << str << endl;
+
+            // create solver parameter by string
+            if (!google::protobuf::TextFormat::ParseFromString(str, &param)) {
+                cout << "Error : solver prototxt file is not valid" << endl;
+                return false;
+            } else {
+
+                // create solver by parameter
+                solver_.reset(new SGDSolver<double>(param));
+
+                // load weights
+                string trainedWeightsCaffemodelPath_l = getTrainedWeightsCaffemodelPath();
+                if (trainedWeightsCaffemodelPath_l != "") {
+                    solver_->net()->CopyTrainedLayersFrom(trainedWeightsCaffemodelPath_l);
+                }
+
+                // --- load input data and expected output data into solver_->net ---
+
+                // create BLOB for inputlayer - input data
+                Blob<double>* inputDataBLOB = solver_->net()->input_blobs()[0];
+
+                // create BLOB for inputlayer - expected output data
+                Blob<double>* expectedOutputDataBLOB = solver_->net()->input_blobs()[1];
+
+
+                // set dimesions of input layer
+                // --> for normal caffe works with images, therefore the data
+                // --> typically is 4 dimensional
+                // --> numberOfImages * numberOfColorChannels * numberOfPixelsInDirectionOfHeight * numberOfPixelsInDirectionOfWidth
+                // --> in this case we use 1-dimensional data, therefore the data-dimension is numberOfInputValues*1*1*1
+                int num      = inputValues_.size();
+                int channels = inputValues_[0].size();
+                int height   = 1;
+                int width    = 1;
+                vector<int> dimensionsOfData = {num,channels,height,width};
+
+                // set dimensions of input data
+                inputDataBLOB->Reshape(dimensionsOfData);
+
+                // set dimensions of expected output data
+                expectedOutputDataBLOB->Reshape(dimensionsOfData);
+
+                // forward dimension-change to all layers
+                solver_->net()->Reshape();
+
+                // insert input values for all neurons for every inputData-dataset
+                // into BLOB of input layer
+
+                for (unsigned int inputDataSetIndex = 0; inputDataSetIndex < inputValues_.size(); inputDataSetIndex++) {
+                    for (unsigned int inputNeuronIndex = 0; inputNeuronIndex < inputValues_[inputDataSetIndex].size(); inputNeuronIndex++) {
+                        setDataOfBLOB(inputDataBLOB,inputDataSetIndex,inputNeuronIndex,0,0,inputValues_[inputDataSetIndex][inputNeuronIndex]);
+                    }
+                }
+
+                // insert expected output values into
+                // BLOB of output layer
+                for (unsigned int i = 0; i < inputValues_.size(); i++) {
+                    setDataOfBLOB(expectedOutputDataBLOB,i,0,0,0,expectedOutputValues_[i]);
+                }
+
+                // start training
+                //  --> this is done by Solve(), which automatically does the following steps
+                //      --> 1. propagates input data through solver_->net
+                //             by automatically using solver_->net()->forward
+                //             as the  output layer is a loss-layer the forward()
+                //             produces a loss value (the badness of the current weights)
+                //      --> 2. by knowing the loss and using solver_->net()->backward() it automatically
+                //             calculates a gradient for every weight (every connection) in the net
+                //             (gradient == a delta of how much the weights have to get changed)
+                //      --> 3. by knowing the gradients it automatically calculates the new weights
+                //  --> these three steps are executed for every input-value and for every learning iteration step
+                //  --> during Solve() preliminary results for the weights are saved to the directory defined in
+                //      solverFile_
+                //  --> the frequency of creating preliminary results as well as the number of training iterations
+                //      and other parameters are defined in solverFile_
+                solver_->Solve();
+
+                // save current trained weights
+                stringstream tempPath;
+                tempPath << param.snapshot_prefix() << "_iter_" << param.max_iter() << ".caffemodel";
+                setTrainedWeightsCaffemodelPath(tempPath.str());
+                solver_->Snapshot();
+
+                // TODO
+                cout << "finished training " << getTrainedWeightsCaffemodelPath() << endl;
+                return true;
+            }
+        }
+
 
         log << SLevel(INFO) << "successfully trained artificial neural net with " <<
                inputValues_.size() << " training samples." << endl;

@@ -4,7 +4,7 @@ layer {
   type: 'Input'
   top: 'data'
   top: 'label'
-  input_param { shape: { dim: 1 dim: 10 dim: 1 dim: 1 } }
+  input_param { shape: { dim: 4 dim: 6 dim: 1 dim: 1 } }
 }
 layer {
   name: 'inputLayer'
@@ -75,7 +75,7 @@ layer {
   bottom: 'activatedHiddenLayer2'
   top: 'outputLayer'
   inner_product_param {
-    num_output: 1
+    num_output: 6
     weight_filler {
       type: 'xavier'
     }
