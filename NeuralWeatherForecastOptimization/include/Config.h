@@ -11,6 +11,7 @@
 
 #include <string>
 #include <float.h>
+#include <QDateTime>
 
 using namespace std;
 
@@ -22,6 +23,10 @@ const string PATH_OF_LOGFILE = "LogFile.txt";
 const string PATH_OF_NET_STRUCTURE_WITHOUT_LOSS = "../NeuralWeatherForecastOptimization/prototxt/CONVOL_30_30_30_30_30_30_1_RELU_without_loss.prototxt";
 const string PATH_OF_TRAINED_WEIGHTS            = "train_iter_450000.caffemodel";
 const string PATH_OF_NET_SOLVER                 = "../NeuralWeatherForecastOptimization/prototxt/CONVOL_30_30_30_30_30_30_1_RELU_ADAGRADsolver.prototxt";
+const double PROPORTION_OF_TRAINING_SET = 0.8;
+const QDateTime START_DATE_TIME_OF_TRAINING_SET = QDateTime(QDate(2014, 8, 19), QTime( 0, 0, 0));
+const QDateTime   END_DATE_TIME_OF_TRAINING_SET = QDateTime(QDate(2016, 7, 16), QTime(23, 0, 0));
+const int TOTAL_NUMBER_OF_TRAINING_SAMPLES = START_DATE_TIME_OF_TRAINING_SET.secsTo(END_DATE_TIME_OF_TRAINING_SET) / 3600;
 const double INFLUXDB_MAX    =  1.79769e+308;
 const double INFLUXDB_MIN    = -1.79769e+308;
 const int    PIN_OF_DS18B20  = 21;

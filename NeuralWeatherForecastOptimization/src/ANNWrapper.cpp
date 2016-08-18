@@ -92,3 +92,19 @@ DataBuffer ANNWrapper::calculateOutput() {
 
     return result;
 }
+
+bool ANNWrapper::checkIfDateTimeIsAEvaluationDate(tm dateTime_) {
+    QDateTime currentDateTime = QDateTime(QDate(dateTime.tm_year, dateTime.tm_mon, dateTime.tm_mday),
+                                          QTime(dateTime.tm_hour, dateTime.tm_min, dateTime.tm_sec));
+    // calculate difference in hours between current and start
+    int secondsSinceStart = START_DATE_TIME_OF_TRAINING_SET.secsTo(currentDateTime);
+    int hoursSinceStart = secondsSinceStart / 3600;
+
+    int distanceBetweenEvalutionData = double(TOTAL_NUMBER_OF_TRAINING_SAMPLES) * double(PROPORTION_OF_TRAINING_SET);
+    return (hoursSinceStart % distanceBetweenEvalutionData == 0);
+
+}
+
+void ANNWrapper::generateTrainingOrPropagationDataSet(vector<double> *outputValues_, vector<vector<double> > *inputValues_) {
+
+}

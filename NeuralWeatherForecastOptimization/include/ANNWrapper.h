@@ -40,6 +40,10 @@ class ANNWrapper {
         ArtificialNeuroNet ANNTemperature;
         ArtificialNeuroNet ANNAirPressure;
 
+        /* --- training ---*/
+        bool checkIfDateTimeIsAEvaluationDate(struct tm dateTime_);
+        void generateTrainingOrPropagationDataSet(vector<vector<double>> inputValues_, vector<double> outputValues_);
+
         /* --- miscellaneous --- */
         LogWriter log;
         DBInterface* dbi;
