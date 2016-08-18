@@ -8,8 +8,8 @@
  * @brief starts training of all neural nets by using train method of ANN-wrapper-class
  *
  */
-int main2() {
-//int main() {
+//int main2() {
+int main() {
     // --- TODO -- dummy code ---
     // randomize
     srand(time(NULL));

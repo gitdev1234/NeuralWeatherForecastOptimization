@@ -41,8 +41,11 @@ class ANNWrapper {
         ArtificialNeuroNet ANNAirPressure;
 
         /* --- training ---*/
+        // todo
         bool checkIfDateTimeIsAEvaluationDate(struct tm dateTime_);
-        void generateTrainingOrPropagationDataSet(vector<vector<double>> inputValues_, vector<double> outputValues_);
+        bool checkIfTrainingsSetIndexIsAEvaluationIndex(int index_);
+        void generateDataSets(vector<vector<double> > *inputValues_, vector<double> *expectedOutputValues_);
+
 
         /* --- miscellaneous --- */
         LogWriter log;
