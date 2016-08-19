@@ -41,10 +41,15 @@ class ANNWrapper {
         ArtificialNeuroNet ANNAirPressure;
 
         /* --- training ---*/
-        // todo
-        bool checkIfDateTimeIsAEvaluationDate(struct tm dateTime_);
         bool checkIfTrainingsSetIndexIsAEvaluationIndex(int index_);
         void generateDataSets(vector<vector<double> > *inputValues_, vector<double> *expectedOutputValues_);
+
+        /* --- preprocess data --- */
+        vector<double> zTransformVector(const vector<double> &vectorToTransform_);
+        vector<double> reZTransformVector(const vector<double> &vectorToReTransform_, const vector<double> &vectorBeforeZTransform_);
+        double scaleVector(const double &valueToScale_, double scaleFactor_, bool minimize_);
+        vector<double> scaleVector(const vector<double> &vectorToScale_, double scaleFactor_, bool minimize_);
+        vector<vector<double>> scaleVector(const vector<vector<double>> &vectorToScale_, double scaleFactor_, bool minimize_);
 
 
         /* --- miscellaneous --- */

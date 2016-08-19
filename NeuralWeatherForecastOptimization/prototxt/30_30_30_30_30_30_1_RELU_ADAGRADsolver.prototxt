@@ -10,7 +10,7 @@ display: 100000
 max_iter: 450000
 #momentum: 0.9
 weight_decay: 0.0005
-snapshot: 100000
+snapshot: 10000
 snapshot_prefix: "train"
 # Display every 20 iterations
 #display: 20

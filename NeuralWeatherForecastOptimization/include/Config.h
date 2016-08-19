@@ -29,13 +29,14 @@ const string PATH_OF_NET_SOLVER                 = "../NeuralWeatherForecastOptim
 // training ann-wrapper
 const double PROPORTION_OF_TRAINING_SET = 0.8;
 const QDateTime START_DATE_TIME_OF_TRAINING_SET = QDateTime(QDate(2014, 8, 19), QTime( 0, 0, 0));
-const QDateTime   END_DATE_TIME_OF_TRAINING_SET = QDateTime(QDate(2014, 8, 25), QTime(23, 0, 0));
+const QDateTime   END_DATE_TIME_OF_TRAINING_SET = QDateTime(QDate(2016, 7, 16), QTime(23, 0, 0));
 const int TOTAL_NUMBER_OF_TRAINING_SAMPLES = (START_DATE_TIME_OF_TRAINING_SET.secsTo(END_DATE_TIME_OF_TRAINING_SET) / 3600) + 1;
 const vector<string> PREDICTOR_LIST  = {"Lufttemperatur_2m"};
 const string PREDICTANT = "Lufttemperatur_2m";
 const vector<string> DATASOURCE_LIST = {"WeatherStation","Forecast"};
 const int PREDICTION_WINDOW_SIZE = 3;
 const int DISTANCE_OF_PREDICTION = 24;
+const int SCALING_FACTOR = 60;
 // database
 const double INFLUXDB_MAX    =  1.79769e+308;
 const double INFLUXDB_MIN    = -1.79769e+308;

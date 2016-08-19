@@ -42,6 +42,8 @@ void ANNWrapper::trainArtificialNeuroNets() {
     vector<double> expectedOutputValues;
     generateDataSets(&inputValues,&expectedOutputValues);
 
+    inputValues = scaleVector(inputValues,SCALING_FACTOR,true);
+    expectedOutputValues = scaleVector(expectedOutputValues,SCALING_FACTOR,true);
 
     ANNTemperature.train(inputValues,expectedOutputValues);
     // TODO
@@ -58,31 +60,19 @@ void ANNWrapper::trainArtificialNeuroNets() {
 DataBuffer ANNWrapper::calculateOutput() {
     DataBuffer result;
 
-    // --- TODO -- dummy code ---
     vector< vector<double> > inputValuesALL;
     vector<double> expectedOutputValuesALL;
     generateDataSets(&inputValuesALL,&expectedOutputValuesALL);
-    vector<double> inputValues = inputValuesALL[inputValuesALL.size()-1];
+    vector<double> inputValues = inputValuesALL[inputValuesALL.size()-6];
+    inputValues = scaleVector(inputValues,SCALING_FACTOR,true);
 
     ANNTemperature.setTrainedWeightsCaffemodelPath(PATH_OF_TRAINED_WEIGHTS);
-    result.data["ANNTemperature"] = ANNTemperature.forward(inputValues);
-    cout << "ExpectedOutput for temperature : " << expectedOutputValuesALL[expectedOutputValuesALL.size()-1] << endl;
-    result.data["ANNAirPressure"] = ANNAirPressure.forward(inputValues);
-    // --- TODO -- dummy code ---
+
+    result.data["ANNTemperature"] = scaleVector(ANNTemperature.forward(inputValues),SCALING_FACTOR,false);
+    cout << "ExpectedOutput for temperature : " << expectedOutputValuesALL[expectedOutputValuesALL.size()-6] << endl;
+    //result.data["ANNAirPressure"] = ANNAirPressure.forward(inputValues);
 
     return result;
-}
-
-bool ANNWrapper::checkIfDateTimeIsAEvaluationDate(tm dateTime_) {
-    QDateTime currentDateTime = QDateTime(QDate(dateTime_.tm_year, dateTime_.tm_mon, dateTime_.tm_mday),
-                                          QTime(dateTime_.tm_hour, dateTime_.tm_min, dateTime_.tm_sec));
-    // calculate difference in hours between current and start
-    int secondsSinceStart = START_DATE_TIME_OF_TRAINING_SET.secsTo(currentDateTime);
-    int hoursSinceStart = secondsSinceStart / 3600;
-
-    int distanceBetweenEvalutionData = double(TOTAL_NUMBER_OF_TRAINING_SAMPLES) * double(PROPORTION_OF_TRAINING_SET);
-    return (hoursSinceStart % distanceBetweenEvalutionData == 0);
-
 }
 
 bool ANNWrapper::checkIfTrainingsSetIndexIsAEvaluationIndex(int index_) {
@@ -166,4 +156,76 @@ void ANNWrapper::generateDataSets(vector<vector<double> > *inputValues_, vector<
         }
     }
 
+}
+
+
+
+/* --- preprocess data --- */
+
+vector<double> ANNWrapperzTransformVector(const vector<double>& vectorToTransform_) {
+
+    vector<double> result = vectorToTransform_;
+
+    // calculate mean
+    double sum = std::accumulate(vectorToTransform_.begin(), vectorToTransform_.end(), 0.0);
+    double mean = double(sum) / double(vectorToTransform_.size());
+    // calculate standard deviation
+    double sq_sum = std::inner_product(vectorToTransform_.begin(), vectorToTransform_.end(), vectorToTransform_.begin(), 0.0);
+    double stdev = std::sqrt(sq_sum / double(vectorToTransform_.size()-1) - mean * mean);
+
+    for (int i = 0 ; i < vectorToTransform_.size(); i++) {
+        result[i] = (double(vectorToTransform_[i]) - double(mean)) / double(stdev);
+    }
+
+    return result;
+
+}
+
+vector<double> ANNWrapperreZTransformVector(const vector<double> &vectorToReTransform_, const vector<double> &vectorBeforeZTransform_) {
+    vector<double> result = vectorToReTransform_;
+
+    // calculate mean
+    double sum = std::accumulate(vectorBeforeZTransform_.begin(), vectorBeforeZTransform_.end(), 0.0);
+    double mean = double(sum) / double(vectorBeforeZTransform_.size());
+    // calculate standard deviation
+    double sq_sum = std::inner_product(vectorBeforeZTransform_.begin(), vectorBeforeZTransform_.end(), vectorBeforeZTransform_.begin(), 0.0);
+    double stdev = std::sqrt(sq_sum / double(vectorBeforeZTransform_.size()-1) - mean * mean);
+
+    for (int i = 0 ; i < vectorToReTransform_.size(); i++) {
+        result[i] = double(vectorToReTransform_[i]) * double(stdev) + double(mean);
+    }
+
+    return result;
+}
+
+double ANNWrapper::scaleVector(const double &valueToScale_, double scaleFactor_, bool minimize_) {
+    if (minimize_) {
+        return valueToScale_ / scaleFactor_;
+    } else {
+        return valueToScale_ * scaleFactor_;
+    }
+}
+
+vector<double> ANNWrapper::scaleVector(const vector<double> &vectorToScale_, double scaleFactor_, bool minimize_) {
+    vector<double> result = vectorToScale_;
+
+    for (int i = 0 ; i < vectorToScale_.size(); i++) {
+        if (minimize_) {
+            result[i] = double(vectorToScale_[i]) / double(scaleFactor_);
+        } else {
+            result[i] = double(vectorToScale_[i]) * double(scaleFactor_);
+        }
+    }
+
+    return result;
+}
+
+vector<vector<double> > ANNWrapper::scaleVector(const vector<vector<double> > &vectorToScale_, double scaleFactor_, bool minimize_) {
+    vector< vector<double> > result = vectorToScale_;
+
+    for (int i = 0 ; i < vectorToScale_.size(); i++) {
+        result[i] = scaleVector(vectorToScale_[i],scaleFactor_,minimize_);
+    }
+
+    return result;
 }
