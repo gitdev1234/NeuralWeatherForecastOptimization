@@ -30,6 +30,8 @@ double analyzeMissingData(string nameOfValueToAnalyze_, string dataSourceToAnaly
 void   createMissingForecastDataWithSlopeOfNeighbours(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, tm startDate_, tm endDate_) ;
 void   createErrorMeasurement(string nameOfValueToAnalyze_);
 void createSlopeMeasurement(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_);
+void createZTransformMeasurement(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_);
+vector<double> zTransformVector(const vector<double>& vectorToTransform_);
 
 /**
  * main of ArchiveDataPreprocessor
@@ -39,7 +41,7 @@ void createSlopeMeasurement(string nameOfValueToAnalyze_, string dataSourceToAna
 //int main4() {
 int main() {
     cout << "started with preProcessing of Lufttemperatur_2m" << endl;
-    //preProcessArchiveData("Lufttemperatur_2m");
+    preProcessArchiveData("Lufttemperatur_2m");
     cout << "finished" << endl;
     cout << "started with preProcessing of Niederschlagshoehe" << endl;
     // //preProcessArchiveData("Niederschlagshoehe");
@@ -117,15 +119,27 @@ void preProcessArchiveData(string nameToPreProcess_) {
     cout << "finished" << endl;
 
     cout << "started creating slope measurement for weather station " << endl;
-    createSlopeMeasurement(nameToPreProcess_,"WeatherStation",startDateTime,endDateTime);
+    //createSlopeMeasurement(nameToPreProcess_,"WeatherStation",startDateTime,endDateTime);
     cout << "finished" << endl;
 
     cout << "started creating slope measurement for forecast" << endl;
-    createSlopeMeasurement(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
+    //createSlopeMeasurement(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
     cout << "finished" << endl;
 
     cout << "started creating slope measurement for error" << endl;
-    createSlopeMeasurement(nameToPreProcess_,"Error",startDateTime,endDateTime);
+    //createSlopeMeasurement(nameToPreProcess_,"Error",startDateTime,endDateTime);
+    cout << "finished" << endl;
+
+    cout << "started creating zTransform measurement for weather station " << endl;
+    createZTransformMeasurement(nameToPreProcess_,"WeatherStation",startDateTime,endDateTime);
+    cout << "finished" << endl;
+
+    cout << "started creating zTransform measurement for forecast" << endl;
+    createZTransformMeasurement(nameToPreProcess_,"Forecast",startDateTime,endDateTime);
+    cout << "finished" << endl;
+
+    cout << "started creating zTransform measurement for error" << endl;
+    createZTransformMeasurement(nameToPreProcess_,"Error",startDateTime,endDateTime);
     cout << "finished" << endl;
 
     cout << "Finished preprocessing" << endl;
@@ -553,3 +567,59 @@ void createMissingForecastDataWithSlopeOfNeighbours(string nameOfValueToAnalyze_
     }
 }
 
+
+void createZTransformMeasurement(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_) {
+
+    // create and init singleton-DBInterface-object
+    DBInterface& dbi = DBInterface::getInstance();
+    // todo
+    dbi.init();
+    dbi.writeStatusOK(true);
+
+
+    DataBuffer CurrentBuffer;
+    CurrentBuffer.startDateTime = startDate_;
+    CurrentBuffer.endDateTime = endDate_;
+    CurrentBuffer.useDateTimes = true;
+    CurrentBuffer.dataSource = dataSourceToAnalyze_;
+    CurrentBuffer.useDataSource = true;
+    CurrentBuffer.data[nameOfValueToAnalyze_] = 0;
+
+
+    vector<DataBuffer> allDataBuffersOfValueToAnalyze = dbi.readFromDataBase(CurrentBuffer);
+    vector<double>     allDataOfValueToAnalyze;
+    for (int i = 0; i < allDataBuffersOfValueToAnalyze.size(); i++) {
+        allDataOfValueToAnalyze.push_back(allDataBuffersOfValueToAnalyze[i].data[nameOfValueToAnalyze_]);
+    }
+
+    vector<double> zTransformedDataOfValueToAnalyze = zTransformVector(allDataOfValueToAnalyze);
+    CurrentBuffer.dataSource = "zTransformed"+CurrentBuffer.dataSource;
+    for (int i = 0 ; i < zTransformedDataOfValueToAnalyze.size(); i++) {
+        CurrentBuffer.endDateTime = CurrentBuffer.startDateTime;
+        CurrentBuffer.data[nameOfValueToAnalyze_] = zTransformedDataOfValueToAnalyze[i];
+        dbi.writeToDataBase(CurrentBuffer);
+        CurrentBuffer.startDateTime = incHour(CurrentBuffer.startDateTime,1);
+        if (i % 100 == 0) {
+            cout << "iterated through " << i << " datapoints." << endl;
+        }
+    }
+}
+
+vector<double> zTransformVector(const vector<double>& vectorToTransform_) {
+
+    vector<double> result = vectorToTransform_;
+
+    // calculate mean
+    double sum = std::accumulate(vectorToTransform_.begin(), vectorToTransform_.end(), 0.0);
+    double mean = double(sum) / double(vectorToTransform_.size());
+    // calculate standard deviation
+    double sq_sum = std::inner_product(vectorToTransform_.begin(), vectorToTransform_.end(), vectorToTransform_.begin(), 0.0);
+    double stdev = std::sqrt(sq_sum / double(vectorToTransform_.size()-1) - mean * mean);
+
+    for (int i = 0 ; i < vectorToTransform_.size(); i++) {
+        result[i] = (double(vectorToTransform_[i]) - double(mean)) / double(stdev);
+    }
+
+    return result;
+
+}

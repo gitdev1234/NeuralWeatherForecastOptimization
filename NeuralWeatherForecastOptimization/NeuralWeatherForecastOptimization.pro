@@ -50,7 +50,8 @@ SOURCES += DBWriterDaemon.cpp \
     src/TemperatureSensor.cpp \
     ArchiveDataPreprocessor.cpp \
     test/main.cpp \
-    src/Third-Party-Code/DS18B20.cpp
+    src/Third-Party-Code/DS18B20.cpp \
+    src/TrainingEvaluator.cpp
 
 
 HEADERS += \
@@ -70,7 +71,8 @@ HEADERS += \
     include/Sensor.h \
     include/SensorType.h \
     include/SLevel.h \
-    include/TemperatureSensor.h
+    include/TemperatureSensor.h \
+    include/TrainingEvaluator.h
 
 unix:!macx: LIBS += -L$$PWD/../../../../../CleanMonthly/caffe_repo/caffe/build/lib/ -lcaffe
 

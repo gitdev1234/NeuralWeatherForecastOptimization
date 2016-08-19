@@ -35,21 +35,31 @@ class ANNWrapper {
 
         /* --- calculate forecast outputs --- */
         DataBuffer calculateOutput();
+    protected:
+        /* --- training ---*/
+        bool checkIfTrainingsSetIndexIsAEvaluationIndex(int index_);
+        void generateDataSets(vector<vector<double> > *inputValues_,
+                              vector<double>          *expectedOutputValues_,
+                              const vector<string>    &predictorList_,
+                              const string            &predictant_,
+                              const vector<string>    &dataSourceList_,
+                              const int                predictionWindowSize_ ,
+                              bool                     trainingDataSet_);
+
+        /* --- preprocess data --- */
+        vector<double> zTransformVector(const vector<double> &vectorToTransform_);
+        vector<vector<double> > zTransformVector(const vector<vector<double> > &vectorToTransform_);
+        vector<double> reZTransformVector(const vector<double> &vectorToReTransform_, const vector<double> &vectorBeforeZTransform_);
+        vector<vector<double> > reZTransformVector(const vector<vector<double> > &vectorToTransform_, const vector<vector<double>> &vectorBeforeZTransform_);
+        double scaleVector(const double &valueToScale_, double scaleFactor_, bool minimize_);
+        vector<double> scaleVector(const vector<double> &vectorToScale_, double scaleFactor_, bool minimize_);
+        vector<vector<double>> scaleVector(const vector<vector<double>> &vectorToScale_, double scaleFactor_, bool minimize_);
+
+
     private:
         /* --- ANNs --- */
         ArtificialNeuroNet ANNTemperature;
         ArtificialNeuroNet ANNAirPressure;
-
-        /* --- training ---*/
-        bool checkIfTrainingsSetIndexIsAEvaluationIndex(int index_);
-        void generateDataSets(vector<vector<double> > *inputValues_, vector<double> *expectedOutputValues_);
-
-        /* --- preprocess data --- */
-        vector<double> zTransformVector(const vector<double> &vectorToTransform_);
-        vector<double> reZTransformVector(const vector<double> &vectorToReTransform_, const vector<double> &vectorBeforeZTransform_);
-        double scaleVector(const double &valueToScale_, double scaleFactor_, bool minimize_);
-        vector<double> scaleVector(const vector<double> &vectorToScale_, double scaleFactor_, bool minimize_);
-        vector<vector<double>> scaleVector(const vector<vector<double>> &vectorToScale_, double scaleFactor_, bool minimize_);
 
 
         /* --- miscellaneous --- */

@@ -40,14 +40,59 @@ void ANNWrapper::trainArtificialNeuroNets() {
 
     vector< vector<double> > inputValues;
     vector<double> expectedOutputValues;
-    generateDataSets(&inputValues,&expectedOutputValues);
 
+    // define training parameter
+    // measurements to use for prediction
+    vector<string> predictorList = {"Lufttemperatur_2m"};
+    // measurement to predict
+    string predictant = "Lufttemperatur_2m";
+    // dataSources to use for prediction
+    vector<string> dataSourceList = {"WeatherStation","Forecast"};
+    // amount of previous values to consider
+    int predictionWindowSize = 3;
+    // yes, generate datasets for training, not for evaluating
+    bool trainingDataSet = true;
+
+    // generate input and expected output data
+    generateDataSets(&inputValues,&expectedOutputValues,predictorList,predictant,dataSourceList,predictionWindowSize,trainingDataSet);
+
+    // normalize and scale data-sets
+    inputValues = zTransformVector(inputValues);
     inputValues = scaleVector(inputValues,SCALING_FACTOR,true);
+    expectedOutputValues = zTransformVector(expectedOutputValues);
     expectedOutputValues = scaleVector(expectedOutputValues,SCALING_FACTOR,true);
 
+    // start training
     ANNTemperature.train(inputValues,expectedOutputValues);
-    // TODO
-    //ANNAirPressure.train(inputValues,expectedOutputValues);
+
+    /* --- ANN for Pressure --- */
+
+
+    // define training parameter
+    // measurements to use for prediction
+    predictorList = {"Luftdruck_2m"};
+    // measurement to predict
+    predictant = "Luftdruck_2m";
+    // dataSources to use for prediction
+    dataSourceList = {"WeatherStation","Forecast"};
+    // amount of previous values to consider
+    predictionWindowSize = 3;
+    // yes, generate datasets for training, not for evaluating
+    trainingDataSet = true;
+
+    // generate input and expected output data
+    generateDataSets(&inputValues,&expectedOutputValues,predictorList,predictant,dataSourceList,predictionWindowSize,trainingDataSet);
+
+    // normalize and scale data-sets
+    inputValues = zTransformVector(inputValues);
+    inputValues = scaleVector(inputValues,SCALING_FACTOR,true);
+    expectedOutputValues = zTransformVector(expectedOutputValues);
+    expectedOutputValues = scaleVector(expectedOutputValues,SCALING_FACTOR,true);
+
+    // start training
+    ANNAirPressure.train(inputValues,expectedOutputValues);
+
+
 }
 
 /* --- calculate forecast outputs --- */
@@ -60,17 +105,78 @@ void ANNWrapper::trainArtificialNeuroNets() {
 DataBuffer ANNWrapper::calculateOutput() {
     DataBuffer result;
 
+    /* --- ANN Temperature --- */
+
     vector< vector<double> > inputValuesALL;
     vector<double> expectedOutputValuesALL;
-    generateDataSets(&inputValuesALL,&expectedOutputValuesALL);
-    vector<double> inputValues = inputValuesALL[inputValuesALL.size()-6];
-    inputValues = scaleVector(inputValues,SCALING_FACTOR,true);
 
+    // define training parameter
+    // measurements to use for prediction
+    vector<string> predictorList = {"Lufttemperatur_2m"};
+    // measurement to predict
+    string predictant = "Lufttemperatur_2m";
+    // dataSources to use for prediction
+    vector<string> dataSourceList = {"WeatherStation","Forecast"};
+    // amount of previous values to consider
+    int predictionWindowSize = 3;
+    // yes, generate datasets for training/calculating output, not for evaluating
+    bool trainingDataSet = true;
+
+    // generate input and expected output data
+    generateDataSets(&inputValuesALL,&expectedOutputValuesALL,predictorList,predictant,dataSourceList,predictionWindowSize,trainingDataSet);
+
+    // normalize and scale data-sets
+    inputValuesALL = zTransformVector(inputValuesALL);
+    inputValuesALL = scaleVector(inputValuesALL,SCALING_FACTOR,true);
+
+    // get last dataset for last calculateable forecast
+    vector<double> inputValues = inputValuesALL[inputValuesALL.size()-1];
+
+    // set path for trained weights
     ANNTemperature.setTrainedWeightsCaffemodelPath(PATH_OF_TRAINED_WEIGHTS);
 
-    result.data["ANNTemperature"] = scaleVector(ANNTemperature.forward(inputValues),SCALING_FACTOR,false);
-    cout << "ExpectedOutput for temperature : " << expectedOutputValuesALL[expectedOutputValuesALL.size()-6] << endl;
-    //result.data["ANNAirPressure"] = ANNAirPressure.forward(inputValues);
+    // calculate output of net
+    double scaledAndTransformedOutput = ANNTemperature.forward(inputValues);
+    // redo z-transformation
+    double scaledOutput = reZTransformVector({scaledAndTransformedOutput},expectedOutputValuesALL)[0];
+    // redo scaling
+    double realOutput = scaleVector(scaledOutput,SCALING_FACTOR,false);
+    result.data["ANNTemperature"] = realOutput;
+
+    /* --- ANN Air Pressure --- */
+
+    // define training parameter
+    // measurements to use for prediction
+    predictorList = {"Luftdruck_2m"};
+    // measurement to predict
+    predictant = "Luftdruck_2m";
+    // dataSources to use for prediction
+    dataSourceList = {"WeatherStation","Forecast"};
+    // amount of previous values to consider
+    predictionWindowSize = 3;
+    // yes, generate datasets for training/calculating output, not for evaluating
+    trainingDataSet = true;
+
+    // generate input and expected output data
+    generateDataSets(&inputValuesALL,&expectedOutputValuesALL,predictorList,predictant,dataSourceList,predictionWindowSize,trainingDataSet);
+
+    // normalize and scale data-sets
+    inputValuesALL = zTransformVector(inputValuesALL);
+    inputValuesALL = scaleVector(inputValuesALL,SCALING_FACTOR,true);
+
+    // get last dataset for last calculateable forecast
+    inputValues = inputValuesALL[inputValuesALL.size()-1];
+
+    // set path for trained weights
+    ANNAirPressure.setTrainedWeightsCaffemodelPath(PATH_OF_TRAINED_WEIGHTS);
+
+    // calculate output of net
+    scaledAndTransformedOutput = ANNAirPressure.forward(inputValues);
+    // redo z-transformation
+    scaledOutput = reZTransformVector({scaledAndTransformedOutput},expectedOutputValuesALL)[0];
+    // redo scaling
+    realOutput = scaleVector(scaledOutput,SCALING_FACTOR,false);
+    result.data["ANNAirPressure"] = realOutput;
 
     return result;
 }
@@ -81,16 +187,22 @@ bool ANNWrapper::checkIfTrainingsSetIndexIsAEvaluationIndex(int index_) {
     return (index_ % distanceBetweenEvaluationData == 0);
 }
 
-void ANNWrapper::generateDataSets(vector<vector<double> > *inputValues_, vector<double> *expectedOutputValues_) {
+void ANNWrapper::generateDataSets(vector<vector<double> > *inputValues_,
+                                  vector<double>          *expectedOutputValues_,
+                                  const vector<string>    &predictorList_,
+                                  const string            &predictant_,
+                                  const vector<string>    &dataSourceList_,
+                                  const int                predictionWindowSize_ ,
+                                  bool                     trainingDataSet_) {
     inputValues_->clear();
     expectedOutputValues_->clear();
 
     inputValues_->resize(TOTAL_NUMBER_OF_TRAINING_SAMPLES);
     expectedOutputValues_->resize(TOTAL_NUMBER_OF_TRAINING_SAMPLES);
 
-    for (int DataSourceIndex = 0; DataSourceIndex < DATASOURCE_LIST.size(); DataSourceIndex++) {
+    for (int DataSourceIndex = 0; DataSourceIndex < dataSourceList_.size(); DataSourceIndex++) {
         DataBuffer trainingSet;
-        trainingSet.dataSource = DATASOURCE_LIST[DataSourceIndex];
+        trainingSet.dataSource = dataSourceList_[DataSourceIndex];
         trainingSet.useDataSource = true;
         trainingSet.startDateTime.tm_year = START_DATE_TIME_OF_TRAINING_SET.date().year();
         trainingSet.startDateTime.tm_mon  = START_DATE_TIME_OF_TRAINING_SET.date().month();
@@ -105,8 +217,8 @@ void ANNWrapper::generateDataSets(vector<vector<double> > *inputValues_, vector<
         trainingSet.endDateTime.tm_min    =   END_DATE_TIME_OF_TRAINING_SET.time().minute();
         trainingSet.endDateTime.tm_sec    =   END_DATE_TIME_OF_TRAINING_SET.time().second();
         trainingSet.useDateTimes = true;
-        for (int PredictorIndex = 0; PredictorIndex < PREDICTOR_LIST.size(); PredictorIndex++) {
-            trainingSet.data[PREDICTOR_LIST[PredictorIndex]] = 0;
+        for (int PredictorIndex = 0; PredictorIndex < predictorList_.size(); PredictorIndex++) {
+            trainingSet.data[predictorList_[PredictorIndex]] = 0;
         }
 
         // read all data of all predictors and current datasource
@@ -116,14 +228,15 @@ void ANNWrapper::generateDataSets(vector<vector<double> > *inputValues_, vector<
         // iterate through all databuffers
         for(int trainingSetIndex = 0; trainingSetIndex < trainingSetBuffer.size(); trainingSetIndex++) {
             // make sure data is not of evalution training set
-            if (!checkIfTrainingsSetIndexIsAEvaluationIndex(trainingSetIndex)) {
+            if ( ( ( trainingDataSet_) && (!checkIfTrainingsSetIndexIsAEvaluationIndex(trainingSetIndex)) ) ||
+                 ( (!trainingDataSet_) && ( checkIfTrainingsSetIndexIsAEvaluationIndex(trainingSetIndex)) ) ){
                 // make sure there is enought previous data
                 // and that there is a expected output data
-                if ( (trainingSetIndex >= PREDICTION_WINDOW_SIZE - 1) &&
+                if ( (trainingSetIndex >= predictionWindowSize_ - 1) &&
                      (trainingSetIndex <= TOTAL_NUMBER_OF_TRAINING_SAMPLES - DISTANCE_OF_PREDICTION - 1) ){
                     // go from current position backwards to get current data and
                     // all needed previous data
-                    for (int predictionWindowIndex = trainingSetIndex; predictionWindowIndex >= trainingSetIndex - PREDICTION_WINDOW_SIZE + 1; predictionWindowIndex--) {
+                    for (int predictionWindowIndex = trainingSetIndex; predictionWindowIndex >= trainingSetIndex - predictionWindowSize_ + 1; predictionWindowIndex--) {
                         vector<double> inputValuesOfCurrentDataSource;
                         typedef std::map<string, double>::iterator it_type;
                         for(it_type iterator = trainingSetBuffer[predictionWindowIndex].data.begin(); iterator != trainingSetBuffer[predictionWindowIndex].data.end(); iterator++) {
@@ -136,7 +249,7 @@ void ANNWrapper::generateDataSets(vector<vector<double> > *inputValues_, vector<
                     }
                     // get expected output value
                     int indexOfExpectedOutput = trainingSetIndex + DISTANCE_OF_PREDICTION;
-                    expectedOutputValues_->at(trainingSetIndex) =  trainingSetBuffer[indexOfExpectedOutput].data[PREDICTANT];
+                    expectedOutputValues_->at(trainingSetIndex) =  trainingSetBuffer[indexOfExpectedOutput].data[predictant_];
                 }
             }
         }
@@ -162,7 +275,7 @@ void ANNWrapper::generateDataSets(vector<vector<double> > *inputValues_, vector<
 
 /* --- preprocess data --- */
 
-vector<double> ANNWrapperzTransformVector(const vector<double>& vectorToTransform_) {
+vector<double> ANNWrapper::zTransformVector(const vector<double>& vectorToTransform_) {
 
     vector<double> result = vectorToTransform_;
 
@@ -181,7 +294,17 @@ vector<double> ANNWrapperzTransformVector(const vector<double>& vectorToTransfor
 
 }
 
-vector<double> ANNWrapperreZTransformVector(const vector<double> &vectorToReTransform_, const vector<double> &vectorBeforeZTransform_) {
+vector<vector<double> > ANNWrapper::zTransformVector(const vector<vector<double> > &vectorToTransform_) {
+    vector< vector<double> > result = vectorToTransform_;
+
+    for (int i = 0 ; i < vectorToTransform_.size(); i++) {
+        result[i] = zTransformVector(vectorToTransform_[i]);
+    }
+
+    return result;
+}
+
+vector<double> ANNWrapper::reZTransformVector(const vector<double> &vectorToReTransform_, const vector<double> &vectorBeforeZTransform_) {
     vector<double> result = vectorToReTransform_;
 
     // calculate mean
@@ -193,6 +316,16 @@ vector<double> ANNWrapperreZTransformVector(const vector<double> &vectorToReTran
 
     for (int i = 0 ; i < vectorToReTransform_.size(); i++) {
         result[i] = double(vectorToReTransform_[i]) * double(stdev) + double(mean);
+    }
+
+    return result;
+}
+
+vector<vector<double> > ANNWrapper::reZTransformVector(const vector<vector<double> > &vectorToTransform_, const vector<vector<double>> &vectorBeforeZTransform_) {
+    vector< vector<double> > result = vectorToTransform_;
+
+    for (int i = 0 ; i < vectorToTransform_.size(); i++) {
+        result[i] = reZTransformVector(vectorToTransform_[i],vectorBeforeZTransform_[i]);
     }
 
     return result;
