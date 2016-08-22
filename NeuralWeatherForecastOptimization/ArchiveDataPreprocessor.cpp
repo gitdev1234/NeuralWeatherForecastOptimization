@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <QDateTime>
 // ---
@@ -32,14 +33,18 @@ void   createErrorMeasurement(string nameOfValueToAnalyze_);
 void createSlopeMeasurement(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_);
 void createZTransformMeasurement(string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_);
 vector<double> zTransformVector(const vector<double>& vectorToTransform_);
+void dataToCSV(const string& path_, string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_);
 
 /**
  * main of ArchiveDataPreprocessor
  * @brief iterates through all data-points in influxDB and creates missing datapoints, using linear lines of best fit
  *
  */
-//int main4() {
-int main() {
+int main4() {
+//int main() {
+
+
+
     cout << "started with preProcessing of Lufttemperatur_2m" << endl;
     preProcessArchiveData("Lufttemperatur_2m");
     cout << "finished" << endl;
@@ -84,6 +89,9 @@ void preProcessArchiveData(string nameToPreProcess_) {
     endDateTime.tm_min  = 0;
     endDateTime.tm_sec  = 0;
 
+    dataToCSV(nameToPreProcess_+".csv",nameToPreProcess_,"Error",startDateTime,endDateTime);
+
+    /*
     //double meanError = analyzeMissingData(nameToPreProcess_,"Forecast","WeatherStation",3,startDateTime,endDateTime);
 
     cout << "started creating missing values for by weather station plus mean error" << endl;
@@ -143,6 +151,7 @@ void preProcessArchiveData(string nameToPreProcess_) {
     cout << "finished" << endl;
 
     cout << "Finished preprocessing" << endl;
+    */
 }
 
 /**
@@ -622,4 +631,32 @@ vector<double> zTransformVector(const vector<double>& vectorToTransform_) {
 
     return result;
 
+}
+
+void dataToCSV(const string& path_, string nameOfValueToAnalyze_, string dataSourceToAnalyze_, struct tm startDate_, struct tm endDate_) {
+    ofstream file;
+    file.open(path_);
+    file << nameOfValueToAnalyze_ << endl;
+
+    // create and init singleton-DBInterface-object
+    DBInterface& dbi = DBInterface::getInstance();
+    // todo
+    dbi.init();
+    dbi.writeStatusOK(true);
+
+
+    DataBuffer CurrentBuffer;
+    CurrentBuffer.startDateTime = startDate_;
+    CurrentBuffer.endDateTime = endDate_;
+    CurrentBuffer.useDateTimes = true;
+    CurrentBuffer.dataSource = dataSourceToAnalyze_;
+    CurrentBuffer.useDataSource = true;
+    CurrentBuffer.data[nameOfValueToAnalyze_] = 0;
+
+
+    vector<DataBuffer> allDataBuffersOfValueToAnalyze = dbi.readFromDataBase(CurrentBuffer);
+    vector<double>     allDataOfValueToAnalyze;
+    for (int i = 0; i < allDataBuffersOfValueToAnalyze.size(); i++) {
+        file << allDataBuffersOfValueToAnalyze[i].data[nameOfValueToAnalyze_] << endl;
+    }
 }

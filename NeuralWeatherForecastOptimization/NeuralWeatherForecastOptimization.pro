@@ -51,7 +51,8 @@ SOURCES += DBWriterDaemon.cpp \
     ArchiveDataPreprocessor.cpp \
     test/main.cpp \
     src/Third-Party-Code/DS18B20.cpp \
-    src/TrainingEvaluator.cpp
+    src/TrainingEvaluator.cpp \
+    ArchiveDataTrainingEvaluator.cpp
 
 
 HEADERS += \

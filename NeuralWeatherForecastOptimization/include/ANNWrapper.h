@@ -55,12 +55,9 @@ class ANNWrapper {
         vector<double> scaleVector(const vector<double> &vectorToScale_, double scaleFactor_, bool minimize_);
         vector<vector<double>> scaleVector(const vector<vector<double>> &vectorToScale_, double scaleFactor_, bool minimize_);
 
-
-    private:
         /* --- ANNs --- */
         ArtificialNeuroNet ANNTemperature;
         ArtificialNeuroNet ANNAirPressure;
-
 
         /* --- miscellaneous --- */
         LogWriter log;

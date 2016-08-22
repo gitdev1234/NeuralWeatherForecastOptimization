@@ -83,8 +83,7 @@ double ArtificialNeuroNet::forward(vector<double> inputValues_) {
         // forward dimension change to all layers.
         net->Reshape();
 
-        // insert inputValue into inputLayer
-
+        // insert inputValues into inputLayer
         // iterate all neurons for every inputData-dataset
         for (unsigned int inputNeuronIndex = 0; inputNeuronIndex < inputValues_.size(); inputNeuronIndex++) {
             setDataOfBLOB(inputLayer,0,inputNeuronIndex,0,0,inputValues_[inputNeuronIndex]);
@@ -100,7 +99,7 @@ double ArtificialNeuroNet::forward(vector<double> inputValues_) {
         cout << "height : " << outputLayer->height() << endl;
         cout << "width : " << outputLayer->width() << endl;
 
-        // copy values in output Layer to 1-dimensional-vector of values
+        // return value in output Layer
         result = getDataOfBLOB(outputLayer,0,0,0,0);
 
         return result;
