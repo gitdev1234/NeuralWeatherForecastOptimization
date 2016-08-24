@@ -22,12 +22,12 @@ int main() {
     // measure time-start
     clock_t begin = clock();
 
-    cout << "Hello World" << endl;
     TrainingEvaluator TEval(&dbi) ;
     TEval.setPredictant("Lufttemperatur_2m");
-    TEval.setPredictorList({"Lufttemperatur_2m","RelativeLuftfeuchte_2m","Windgeschwindigkeit_Stundenmittel","Windrichtung_Stundenmittel"});
+    //TEval.setPredictorList({"Lufttemperatur_2m","RelativeLuftfeuchte_2m","Windgeschwindigkeit_Stundenmittel","Windrichtung_Stundenmittel"});
+    TEval.setPredictorList({"Lufttemperatur_2m","RelativeLuftfeuchte_2m"});
     TEval.setDataSourceList({"zTransformedForecast","zTransformedWeatherStation"});
-    TEval.setPredictionWindowSize(3);
+    TEval.setPredictionWindowSize(2);
 
     TEval.evaluateTraining(TrainingApproach::ReLU);
 

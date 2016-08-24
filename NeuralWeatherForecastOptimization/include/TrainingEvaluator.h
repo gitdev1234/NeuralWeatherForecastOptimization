@@ -1,6 +1,8 @@
 #ifndef TRAININGEVALUATOR_H
 #define TRAININGEVALUATOR_H
 
+#include <fstream>
+// ---
 #include "ANNWrapper.h"
 #include "DBInterface.h"
 

@@ -54,6 +54,8 @@ class ANNWrapper {
         double scaleVector(const double &valueToScale_, double scaleFactor_, bool minimize_);
         vector<double> scaleVector(const vector<double> &vectorToScale_, double scaleFactor_, bool minimize_);
         vector<vector<double>> scaleVector(const vector<vector<double>> &vectorToScale_, double scaleFactor_, bool minimize_);
+        vector<double> moveVectorByValue(const vector<double> &vectorToMove_, double delta_);
+        vector<vector<double>> moveVectorByValue(const vector<vector<double>> &vectorToMove_, double delta_);
 
         /* --- ANNs --- */
         ArtificialNeuroNet ANNTemperature;
@@ -62,6 +64,7 @@ class ANNWrapper {
         /* --- miscellaneous --- */
         LogWriter log;
         DBInterface* dbi;
+
 };
 
 #endif // ANNWRAPPER_H

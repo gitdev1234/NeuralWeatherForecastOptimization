@@ -44,7 +44,6 @@ int main4() {
 //int main() {
 
 
-
     cout << "started with preProcessing of Lufttemperatur_2m" << endl;
     preProcessArchiveData("Lufttemperatur_2m");
     cout << "finished" << endl;
@@ -89,7 +88,8 @@ void preProcessArchiveData(string nameToPreProcess_) {
     endDateTime.tm_min  = 0;
     endDateTime.tm_sec  = 0;
 
-    dataToCSV(nameToPreProcess_+".csv",nameToPreProcess_,"Error",startDateTime,endDateTime);
+    dataToCSV(nameToPreProcess_+"ZWS.csv",nameToPreProcess_,"zTransformedWeatherStation",startDateTime,endDateTime);
+    dataToCSV(nameToPreProcess_+"ZFO.csv",nameToPreProcess_,"zTransformedForecast",startDateTime,endDateTime);
 
     /*
     //double meanError = analyzeMissingData(nameToPreProcess_,"Forecast","WeatherStation",3,startDateTime,endDateTime);
@@ -656,7 +656,15 @@ void dataToCSV(const string& path_, string nameOfValueToAnalyze_, string dataSou
 
     vector<DataBuffer> allDataBuffersOfValueToAnalyze = dbi.readFromDataBase(CurrentBuffer);
     vector<double>     allDataOfValueToAnalyze;
+
+    int numberOfEvaluationDataSets = double(TOTAL_NUMBER_OF_TRAINING_SAMPLES) * double(1-PROPORTION_OF_TRAINING_SET);
+    int distanceBetweenEvaluationData = TOTAL_NUMBER_OF_TRAINING_SAMPLES / numberOfEvaluationDataSets;
+
+
     for (int i = 0; i < allDataBuffersOfValueToAnalyze.size(); i++) {
-        file << allDataBuffersOfValueToAnalyze[i].data[nameOfValueToAnalyze_] << endl;
+        // if only evalution data
+        if (i % distanceBetweenEvaluationData != 0) {
+            file << allDataBuffersOfValueToAnalyze[i].data[nameOfValueToAnalyze_] << endl;
+        }
     }
 }

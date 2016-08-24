@@ -5,12 +5,12 @@ test_interval: 1000
 base_lr: 0.01
 lr_policy: "step"
 gamma: 0.1
-stepsize: 100000
-display: 100000
-max_iter: 450000
+stepsize: 15000
+display: 1000
+max_iter: 50000
 #momentum: 0.9
 weight_decay: 0.0005
-snapshot: 100000
+snapshot: 1000
 snapshot_prefix: "train"
 # Display every 20 iterations
 #display: 20

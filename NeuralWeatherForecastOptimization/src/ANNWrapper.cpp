@@ -362,3 +362,23 @@ vector<vector<double> > ANNWrapper::scaleVector(const vector<vector<double> > &v
 
     return result;
 }
+
+vector<double> ANNWrapper::moveVectorByValue(const vector<double> &vectorToMove_, double delta_) {
+    vector<double> result = vectorToMove_;
+
+    for (int i = 0 ; i < vectorToMove_.size(); i++) {
+        result[i] += delta_;
+    }
+
+    return result;
+}
+
+vector<vector<double>> ANNWrapper::moveVectorByValue(const vector<vector<double>> &vectorToMove_, double delta_) {
+    vector<vector<double>> result = vectorToMove_;
+
+    for (int i = 0 ; i < vectorToMove_.size(); i++) {
+        result[i] = moveVectorByValue(result[i],delta_);
+    }
+
+    return result;
+}

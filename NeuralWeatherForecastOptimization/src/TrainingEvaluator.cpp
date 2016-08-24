@@ -33,30 +33,83 @@ void TrainingEvaluator::evaluateReLU() {
 
     // generate input and expected output data
     generateDataSets(&inputValues,&expectedOutputValues,predictorList,predictant,dataSourceList,predictionWindowSize,true);
+  /*  inputValues = {{0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8},
+                   {0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9},
+                   {0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.1},
+                   {0.4,0.5,0.6,0.7,0.8,0.9,0.1,0.2},
+                   {0.5,0.6,0.7,0.8,0.9,0.1,0.2,0.3},
+                   {0.6,0.7,0.8,0.9,0.1,0.2,0.3,0.4},
+                   {0.7,0.8,0.9,0.1,0.2,0.3,0.4,0.5},
+                   {0.8,0.9,0.1,0.2,0.3,0.4,0.5,0.6},
+                   {0.9,0.1,0.2,0.3,0.4,0.5,0.6,0.7}};
+
+    expectedOutputValues = {0.9,
+                         0.1,
+                         0.2,
+                         0.3,
+                         0.4,
+                         0.5,
+                         0.6,
+                         0.7,
+                         0.8};
+*/
+
+    // move values to positive range
+    double offset = abs(*min_element(expectedOutputValues.begin(),expectedOutputValues.end()));
+    expectedOutputValues = moveVectorByValue(expectedOutputValues,offset);
+    inputValues = moveVectorByValue(inputValues,offset);
 
     // normalize and scale data-sets
     // z-Transform is alrady done before
-    inputValues = scaleVector(inputValues,SCALING_FACTOR,true);
-    vector<double> expectedOutputValuesBeforeNormalization = expectedOutputValues;
-    expectedOutputValues = scaleVector(expectedOutputValues,SCALING_FACTOR,true);
+    //inputValues          = scaleVector(inputValues,SCALING_FACTOR,true);
+    //expectedOutputValues = scaleVector(expectedOutputValues,SCALING_FACTOR,true);
 
     // start training
     ANNTemperature.train(inputValues,expectedOutputValues);
 
     // get test data sets
-    double MSE = 0.0;
+    //generateDataSets(&inputValues,&expectedOutputValues,predictorList,predictant,dataSourceList,predictionWindowSize,false);
+/*    inputValues = {{0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8},
+                   {0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9},
+                   {0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.1},
+                   {0.4,0.5,0.6,0.7,0.8,0.9,0.1,0.2},
+                   {0.5,0.6,0.7,0.8,0.9,0.1,0.2,0.3},
+                   {0.6,0.7,0.8,0.9,0.1,0.2,0.3,0.4},
+                   {0.7,0.8,0.9,0.1,0.2,0.3,0.4,0.5},
+                   {0.8,0.9,0.1,0.2,0.3,0.4,0.5,0.6},
+                   {0.9,0.1,0.2,0.3,0.4,0.5,0.6,0.7}};
+
+    expectedOutputValues = {0.9,
+                         0.1,
+                         0.2,
+                         0.3,
+                         0.4,
+                         0.5,
+                         0.6,
+                         0.7,
+                         0.8};
+*/
+    // normalize and scale data-sets
+    // z-Transform is alrady done before
+    //inputValues = scaleVector(inputValues,SCALING_FACTOR,true);
+
+    // move values to positive range
+    inputValues = moveVectorByValue(inputValues,offset);
+
+    // calculate forecast
     vector<double> forecastValues;
-    generateDataSets(&inputValues,&expectedOutputValues,predictorList,predictant,dataSourceList,predictionWindowSize,false);
     for (int i = 0; i < inputValues.size(); i++) {
         forecastValues.push_back(ANNTemperature.forward(inputValues[i]));
     }
 
-    vector<double> expectedOutputWithoutZTransform;
-    generateDataSets(&inputValues,&expectedOutputValues,{predictant},predictant,{"WeatherStation"},predictionWindowSize,false);
+    // remove scaling of data-sets
+    //forecastValues = scaleVector(forecastValues,SCALING_FACTOR,false);
+    // remove offset for positive range
+    forecastValues = moveVectorByValue(forecastValues,-offset);
 
-    forecastValues = reZTransformVector(forecastValues,expectedOutputValuesBeforeNormalization);
-
-    MSE = calcMSE(forecastValues,expectedOutputValuesBeforeNormalization);
+    // calculate mean square error
+    // and output forecast to csv
+    double MSE = calcMSE(forecastValues,expectedOutputValues);
     cout << "MSE : " << MSE << endl;
 
 }
@@ -95,10 +148,14 @@ vector<double> TrainingEvaluator::getOriginalNotNormalizedData(string nameOfValu
 }
 
 double TrainingEvaluator::calcMSE(vector<double> forecast_, vector<double> realValues_) {
+    ofstream file;
+    file.open("Forecast.csv");
+    file << "x,Forecast,Real" << endl;
     double MSE = 0.0;
     if (forecast_.size() == realValues_.size()) {
         for (int i = 0; i < forecast_.size(); i++) {
             MSE += (forecast_[i]-realValues_[i]) * (forecast_[i]-realValues_[i]);
+            file << i << "," << forecast_[i] << "," << realValues_[i] << endl;
         }
     }
     MSE /= forecast_.size();
